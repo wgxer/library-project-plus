@@ -1,4 +1,4 @@
-package lpp;
+package lpp.item;
 
 public class Book extends LibraryItem {
 

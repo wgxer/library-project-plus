@@ -1,4 +1,4 @@
-package lpp;
+package lpp.account;
 
 public class User extends Account {
 
