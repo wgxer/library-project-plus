@@ -1,3 +1,4 @@
+package lpp;
 
 public class LibraryItem {
 	private int pages;
