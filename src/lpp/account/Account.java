@@ -1,8 +1,8 @@
 package lpp.account;
 
 public class Account {
-	private String username;
-	private String password;
+	protected String username;
+	protected String password;
 	
 	// TODO: Remove this after all subclasses are implemented
 	public Account() {

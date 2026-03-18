@@ -1,15 +1,17 @@
 package lpp.account;
 
+import lpp.Displayable;
 import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
 
-public class User extends Account {
+public class User extends Account implements Displayable{
 
 	protected double balance;
 	protected LibraryItem[] borrowedItems;
 	protected int itemsCount;
 	protected int sessionBorrows;
 	protected int sessionReturns;
+	protected double sessionFees;
 	
 	public User(String username, String password, double balance) {
 		super(username, password);
@@ -18,6 +20,7 @@ public class User extends Account {
 		itemsCount=0;
 		sessionBorrows=0;
 		sessionReturns=0;
+		sessionFees=0;
 	}
 	
 	/* Regular users may only borrow books
@@ -36,6 +39,7 @@ public class User extends Account {
 		itemsCount++;
 		sessionBorrows++;
 		balance -= b.calculatePrice();
+		sessionFees += b.calculatePrice();
 		b.useItem(this);
 		return 1;
 		
@@ -66,6 +70,26 @@ public class User extends Account {
 		itemsCount--;
 		return 1;
 		
+	}
+	
+	public void display() {
+		    
+		    System.out.println("╭───────────────────────────────────────────────╮");
+		    System.out.println("│                User Information               │");
+		    System.out.println("├───────────────────────────────────────────────┤");
+	        System.out.printf ("│ %-30s : %-12s │\n", "Username", username);
+	        System.out.printf ("│ %-30s : %-12.2f │\n", "Balance", balance);
+	        System.out.printf ("│ %-30s : %-12d │\n", "Books currently borrowed", itemsCount);
+	        System.out.printf ("│ %-30s : %-12d │\n", "Books borrowed during session", sessionBorrows);
+	        System.out.printf ("│ %-30s : %-12d │\n", "Books returned during session", sessionReturns);
+	        System.out.printf ("│ %-30s : %-12.2f │\n", "Fees incurred during session", sessionFees);
+	        System.out.println("╰───────────────────────────────────────────────╯");
+	}
+	
+	public void reset() {
+		sessionBorrows=0;
+		sessionReturns=0;
+		sessionFees=0;
 	}
 	
 	

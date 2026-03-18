@@ -11,16 +11,16 @@ public class Book extends LibraryItem {
 
 	
 	public void display() {
-		System.out.println("╭────────────────────────────────────────╮");
-		System.out.println("│              Book Information          │");
-		System.out.println("├────────────────────────────────────────┤");
-		System.out.printf ("│ %-12s : %-20s │\n", "Name", name);
-		System.out.printf ("│ %-12s : %-20s │\n", "Author", authorName);
-		System.out.printf ("│ %-12s : %-20d │\n", "Pages", pages);
-		System.out.printf ("│ %-12s : %-20d │\n", "Year", publcationYear);
-		System.out.printf ("│ %-12s : %-20.1f │\n", "Rating", reviews);
-		System.out.printf ("│ %-12s : %-20d │\n", "Review Count", reviewsCount);
-		System.out.println("╰────────────────────────────────────────╯");
+		System.out.println("╭───────────────────────────────╮");
+		System.out.println("│       Book Information        │");
+		System.out.println("├───────────────────────────────┤");
+		System.out.printf ("│ %-14s : %-12s │\n", "Name", name);
+		System.out.printf ("│ %-14s : %-12s │\n", "Author", authorName);
+		System.out.printf ("│ %-14s : %-12d │\n", "Pages", pages);
+		System.out.printf ("│ %-14s : %-12d │\n", "Year", publcationYear);
+		System.out.printf ("│ %-14s : %-12.2f │\n", "Rating", reviews);
+		System.out.printf ("│ %-14s : %-12d │\n", "Times borrowed", timesUsed);
+		System.out.println("╰───────────────────────────────╯");
 	}
 
 	
