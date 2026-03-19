@@ -22,7 +22,7 @@ public class User extends Account implements Displayable{
 		sessionReturns=0;
 		sessionFees=0;
 	}
-	
+
 	/* Regular users may only borrow books
 	  1 = book borrowed successfully
 	 -1 = reached borrow limit
@@ -59,7 +59,7 @@ public class User extends Account implements Displayable{
 			if (b == borrowedItems[i])      // since User/item is an aggregation relationship, passed parameter could have the same reference as one of the entries
 			index= i;
 		}
-		if (index == -5)
+		if (index == -3)
 			return -3;
 		for(int i= index; i<itemsCount-1; i++) {
 			borrowedItems[i]= borrowedItems[i+1];
@@ -77,7 +77,7 @@ public class User extends Account implements Displayable{
 		    System.out.println("╭───────────────────────────────────────────────╮");
 		    System.out.println("│                User Information               │");
 		    System.out.println("├───────────────────────────────────────────────┤");
-	        System.out.printf ("│ %-30s : %-12s │\n", "Username", username);
+	        System.out.printf ("│ %-30s : %-12s │\n", "Username", getUsername());
 	        System.out.printf ("│ %-30s : %-12.2f │\n", "Balance", balance);
 	        System.out.printf ("│ %-30s : %-12d │\n", "Books currently borrowed", itemsCount);
 	        System.out.printf ("│ %-30s : %-12d │\n", "Books borrowed during session", sessionBorrows);
@@ -90,6 +90,18 @@ public class User extends Account implements Displayable{
 		sessionBorrows=0;
 		sessionReturns=0;
 		sessionFees=0;
+	}
+	
+	public double getBalance() {
+		return balance;
+	}
+
+	public LibraryItem[] getBorrowedItems() {
+		return borrowedItems;
+	}
+
+	public int getItemsCount() {
+		return itemsCount;
 	}
 	
 	
