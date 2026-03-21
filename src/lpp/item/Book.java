@@ -12,7 +12,7 @@ public class Book extends LibraryItem {
 	
 	public void display() {
 		System.out.println("╭───────────────────────────────╮");
-		System.out.println("│       Book Information        │");
+		System.out.println("│        Book Information       │");
 		System.out.println("├───────────────────────────────┤");
 		System.out.printf ("│ %-14s : %-12s │\n", "Name", name);
 		System.out.printf ("│ %-14s : %-12s │\n", "Author", authorName);

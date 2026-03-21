@@ -3,54 +3,67 @@ package lpp.item;
 public class Manuscript extends LibraryItem {
 	
 	private int age;
-	private String[] feedbacks;
-	private int feedbacksCount;
+	private Comment[] comments;
+	private int commentsCount;
 	
 	
 	
 	public Manuscript(int pages, String name, String authorName, int age) {
 		super(pages, name, authorName);
 		this.age= age;
-		feedbacks= new String[100];
-		feedbacksCount=0;
+		comments= new Comment[100];
+		commentsCount=0;
 	}
-	
-	public boolean addFeedback(String comment) {
-		if (feedbacksCount == 100)
-			return false;
-		feedbacks[feedbacksCount]= comment+"\n-left by"+usedBy.getUsername();
-		feedbacksCount++;
-		return true;
+	/* add comment if there is available space and the comment doesn't exceed character limit
+	   1 = comment added successfully
+	  -1 = no space to add comment
+	  -2 = comment exceeds character limit   */
+	public int addComment(String comment) {
+		if (commentsCount == 100)
+			return -1;
+		if (comment.length() == 100)
+			return -2;
+		comments[commentsCount]= new Comment(usedBy.getUsername(), comment);
+		commentsCount++;
+		return 1;
 	}
 	/* show comment based on given index
-	  1 = comment printed successfuly
+	  1 = comment printed successfully
 	 -1 = no comments available
 	 -2 = index out of bounds  */
 	                                     
 	public int printComment(int index) {
-		if (feedbacksCount==0)
+		if (commentsCount == 0)
 			return -1;
 		if (index<1 || index>100)
-			return -2;              // This method prints the first 20 characters of the comment, then makes a new line. Needs testing
-		for(int i=0; i<feedbacks[index].length(); i+=20) {
-			System.out.println(feedbacks[index].substring(i, Math.min(i+20, feedbacks[index].length())));
-			
-		} return 1;
+			return -2;
+		comments[index-1].display();
+		return 1;
 	}
 	
-	// Displays list of comments registred, best if there was an array of objects instead of Strings
+	
 	public boolean displayCommentsList() {
-		if (feedbacksCount == 0)
+		if (commentsCount == 0)
 			return false;
-		for (int i=1; i<=feedbacksCount; i++) {
-			System.out.println("Comment -"+i);
+		for (int i=1; i<=commentsCount; i++) {
+			System.out.println(i+"- Comment left by "+comments[i-1].getCommenter());
 			
 		} return true;
 	}
 	
 	public void display() {
-		// TODO: Implement Manuscript::display
-	}
+		System.out.println("╭──────────────────────────────────────────────────╮");
+		System.out.println("│              Manuscript Information              │");
+		System.out.println("├──────────────────────────────────────────────────┤");
+		System.out.printf ("│ %-14s : %-30s  │\n", "Name", name);
+		System.out.printf ("│ %-14s : %-30s  │\n", "Author", authorName);
+		System.out.printf ("│ %-14s : %-30d  │\n", "Pages", pages);
+		System.out.printf ("│ %-14s : %-30d  │\n", "Age", age);
+		System.out.printf ("│ %-14s : %-30d  │\n", "Comments", commentsCount);
+		System.out.printf ("│ %-14s : %-30.2f  │\n", "Rating", reviews);
+		System.out.printf ("│ %-14s : %-30d  │\n", "Times borrowed", timesUsed);
+		System.out.println("╰──────────────────────────────────────────────────╯");
+	} 
 	
 	public double calculatePrice() {
 		double price = pages/15+age*5;
