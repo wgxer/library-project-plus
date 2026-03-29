@@ -13,6 +13,11 @@ public class Author extends User {
 		publishedBooks= 0;
 	}
 	
+	public Author(User user) {
+		super(user);
+		publishedBooks= 0;
+	}
+	
 	// publish a book, and then send request to administator to process
 	public void publishBook(int pages, String name) {
      
@@ -28,13 +33,21 @@ public class Author extends User {
 			return -1;;
 		if(!i.isAvailable())
 			return -2;
-		if(balance<i.calculatePrice())
+		double price = i.calculatePrice();
+		
+		if(balance < price)
 			return -3;
+		
 		borrowedItems[itemsCount] = i;
 		itemsCount++;
 		sessionBorrows++;
-		balance -= i.calculatePrice();
-		sessionFees += i.calculatePrice();
+		
+		balance -= price;
+		sessionFees += price;
+		
+		Admin.recordBorrow();
+		Admin.recordRevenue(price);
+		
 		i.useItem(this);
 		return 1;
 	}

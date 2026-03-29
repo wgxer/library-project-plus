@@ -32,6 +32,16 @@ public class AccountManager {
 		return INSTANCE;
 	}
 	
+	public Account findAccount(String username) {
+		int accountIndex = findAccountIndex(username);
+		
+		if (accountIndex != -1) {
+			return accounts[accountIndex];
+		}
+		
+		return null;
+	}
+	
 	/**
 	 * Adds a new account if possible
 	 * 
@@ -53,6 +63,17 @@ public class AccountManager {
 		return 0;
 	}
 	
+	public boolean updateAccount(Account account) {
+		int accountIndex = findAccountIndex(account.getUsername());
+		
+		if (accountIndex == -1) {
+			return false;
+		}
+		
+		accounts[accountIndex] = account;
+		return true;
+	}
+	
 	public boolean login(String username, String password) {
 		Account account = findAccount(username);
 		
@@ -64,19 +85,26 @@ public class AccountManager {
 		return false;
 	}
 	
+	public boolean logout() {
+		if (currentAccount == null) {
+			return false;
+		}
+		
+		currentAccount = null;
+		return true;
+	}
+	
 	public Account getCurrentAccount() {
 		return currentAccount;
 	}
 	
-	private Account findAccount(String username) {
-		for (int i = 0; i < accountsCount; i++) {
-			Account account = accounts[i];
-			
-			if (accounts[i].getUsername().equals(username)) {
-				return account;
+	private int findAccountIndex(String username) {
+		for (int accountIndex = 0; accountIndex < accountsCount; accountIndex++) {
+			if (accounts[accountIndex].getUsername().equals(username)) {
+				return accountIndex;
 			}
 		}
 		
-		return null;
+		return -1;
 	}
 }
