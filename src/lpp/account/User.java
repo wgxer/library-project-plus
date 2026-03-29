@@ -16,13 +16,26 @@ public class User extends Account implements Displayable{
 	public User(String username, String password, double balance) {
 		super(username, password);
 		this.balance=balance;
+		
 		borrowedItems= new LibraryItem[5];
 		itemsCount=0;
+		
 		sessionBorrows=0;
 		sessionReturns=0;
 		sessionFees=0;
 	}
-
+	
+	public User(User other) {
+		super(other);
+		this.balance = other.balance;
+		
+		this.borrowedItems = other.borrowedItems;
+		this.itemsCount = other.itemsCount;
+		
+		this.sessionBorrows = other.sessionBorrows;
+		this.sessionReturns = other.sessionReturns;
+	}
+	
 	/* Regular users may only borrow books
 	  1 = book borrowed successfully
 	 -1 = reached borrow limit
@@ -36,13 +49,23 @@ public class User extends Account implements Displayable{
 			return -2;
 		if(!b.isAvailable())
 			return -3;
-		if(balance<b.calculatePrice())
+		
+		double price = b.calculatePrice();
+		
+		if (balance < price) {
 			return -4;
+		}
+		
 		borrowedItems[itemsCount] = b;
 		itemsCount++;
 		sessionBorrows++;
-		balance -= b.calculatePrice();
-		sessionFees += b.calculatePrice();
+		
+		balance -= price;
+		sessionFees += price;
+		
+		Admin.recordBorrow();
+		Admin.recordRevenue(price);
+		
 		b.useItem(this);
 		return 1;
 		
@@ -71,6 +94,9 @@ public class User extends Account implements Displayable{
 		b.returnItem();
 		sessionReturns++;
 		itemsCount--;
+		
+		Admin.recordReturn();
+		
 		return 1;
 		
 	}
@@ -100,7 +126,7 @@ public class User extends Account implements Displayable{
 	}
 	
 	public void addToBalance(Double value) {
-	balance += value;
+		balance += value;
 	}
 	
 	public void reset() {

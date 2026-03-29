@@ -14,6 +14,11 @@ public class Account {
 		this.password = password;
 	}
 	
+	public Account(Account other) {
+		this.username = other.username;
+		this.password = other.password;
+	}
+	
 	public String getUsername() {
 		return username;
 	}
