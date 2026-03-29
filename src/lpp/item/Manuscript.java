@@ -14,6 +14,20 @@ public class Manuscript extends LibraryItem {
 		comments= new Comment[100];
 		commentsCount=0;
 	}
+	
+	public Manuscript(Manuscript m) {
+		super(m);
+		this.age= m.age;
+		this.comments= new Comment[m.comments.length];
+		for(int i=0; i<m.commentsCount; i++) {
+			this.comments[i]= new Comment(m.comments[i]);
+		}
+		this.commentsCount= m.commentsCount;
+	}
+	
+	public LibraryItem copyItem() {
+		return new Manuscript(this);
+	}
 	/* add comment if there is available space and the comment doesn't exceed character limit
 	   1 = comment added successfully
 	  -1 = no space to add comment

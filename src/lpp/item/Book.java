@@ -8,6 +8,15 @@ public class Book extends LibraryItem {
 		super(pages,name,aoutherName);
 		this.publcationYear = publcationYear;
 	}
+	
+	public Book(Book b) {
+		super(b);
+		this.publcationYear= b.publcationYear;
+	}
+	
+	public LibraryItem copyItem() {
+		return new Book(this);
+	}
 
 	
 	public void display() {

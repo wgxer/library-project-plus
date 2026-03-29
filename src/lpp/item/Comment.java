@@ -12,6 +12,11 @@ public class Comment implements Displayable {
 		this.body= body;
 	}
 	
+	public Comment(Comment c) {
+		this.commenter= c.commenter;
+		this.body= c.body;
+	}
+	
 	public void display() {
 		System.out.println("╭──────────────────────────────╮");
 		System.out.printf ("│%-30s│\n",commenter);

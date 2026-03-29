@@ -24,6 +24,19 @@ public abstract class LibraryItem implements Displayable{
 		timesUsed=0;
 	}
 	
+	public LibraryItem(LibraryItem i) {
+		this.pages = i.pages;
+		this.name= i.name;
+		this.authorName= i.authorName;
+		this.isAvailable= i.isAvailable;
+		this.usedBy= i.usedBy;
+		this.reviews= i.reviews;
+		this.reviewsCount= i.reviewsCount;
+		this.timesUsed= i.timesUsed;
+	}
+	
+	public abstract LibraryItem copyItem();
+	
 	public boolean useItem(User u) {
 		if (isAvailable) {
 		isAvailable= false;
