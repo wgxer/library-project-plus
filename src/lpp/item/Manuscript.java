@@ -59,12 +59,22 @@ public class Manuscript extends LibraryItem {
 		System.out.printf ("│ %-14s : %-30s  │\n", "Author", authorName);
 		System.out.printf ("│ %-14s : %-30d  │\n", "Pages", pages);
 		System.out.printf ("│ %-14s : %-30d  │\n", "Age", age);
+		System.out.printf ("│ %-14s : %-30.2f  │\n", "Borrowing fee", calculatePrice());
 		System.out.printf ("│ %-14s : %-30d  │\n", "Comments", commentsCount);
 		System.out.printf ("│ %-14s : %-30.2f  │\n", "Rating", reviews);
 		System.out.printf ("│ %-14s : %-30d  │\n", "Times borrowed", timesUsed);
 		System.out.println("╰──────────────────────────────────────────────────╯");
 	} 
 	
+	public int getAge() {
+		return age;
+	}
+	public Comment[] getComments() {
+		return comments;
+	}
+	public int getCommentsCount() {
+		return commentsCount;
+	}
 	public double calculatePrice() {
 		double price = pages/15+age*5;
 		return price; 

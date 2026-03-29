@@ -27,7 +27,8 @@ public class User extends Account implements Displayable{
 	  1 = book borrowed successfully
 	 -1 = reached borrow limit
 	 -2 = cannot borrow Manuscripts aka "Unpublished books"
-	 -3 = book is not available */
+	 -3 = book is not available 
+	 -4 = insufficient balance */
 	public int borrowItem(LibraryItem b) {
 		if (itemsCount == 5)
 			return -1;
@@ -35,6 +36,8 @@ public class User extends Account implements Displayable{
 			return -2;
 		if(!b.isAvailable())
 			return -3;
+		if(balance<b.calculatePrice())
+			return -4;
 		borrowedItems[itemsCount] = b;
 		itemsCount++;
 		sessionBorrows++;
@@ -74,16 +77,30 @@ public class User extends Account implements Displayable{
 	
 	public void display() {
 		    
-		    System.out.println("╭───────────────────────────────────────────────╮");
-		    System.out.println("│                User Information               │");
-		    System.out.println("├───────────────────────────────────────────────┤");
-	        System.out.printf ("│ %-30s : %-12s │\n", "Username", getUsername());
-	        System.out.printf ("│ %-30s : %-12.2f │\n", "Balance", balance);
-	        System.out.printf ("│ %-30s : %-12d │\n", "Books currently borrowed", itemsCount);
-	        System.out.printf ("│ %-30s : %-12d │\n", "Books borrowed during session", sessionBorrows);
-	        System.out.printf ("│ %-30s : %-12d │\n", "Books returned during session", sessionReturns);
-	        System.out.printf ("│ %-30s : %-12.2f │\n", "Fees incurred during session", sessionFees);
-	        System.out.println("╰───────────────────────────────────────────────╯");
+		    System.out.println("╭─────────────────────────────────────────────────────────────────╮");
+		    System.out.println("│                         User Information                        │");
+		    System.out.println("├─────────────────────────────────────────────────────────────────┤");
+	        System.out.printf ("│ %-30s : %-30s │\n", "Username", getUsername());
+	        System.out.printf ("│ %-30s : %-30.2f │\n", "Balance", balance);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", itemsCount);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed during session", sessionBorrows);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned during session", sessionReturns);
+	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred during session", sessionFees);
+	        System.out.println("╰─────────────────────────────────────────────────────────────────╯");
+	}
+	
+	public boolean displayItemsList() {
+		if(itemsCount == 0)
+			return false;
+		for(int i=1; i<=itemsCount; i++) {
+			System.out.println(i+"- "+borrowedItems[i-1].getName());
+		}
+		return true;
+			
+	}
+	
+	public void addToBalance(Double value) {
+	balance += value;
 	}
 	
 	public void reset() {
