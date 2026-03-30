@@ -58,21 +58,21 @@ public class Library {
 	}
 	// Method that searches an item based on the names of the items, returns an array with items that qualify the criteria
 	public LibraryItem[] searchItem(String input) {
+		String itemName;
+		input = input.toLowerCase();
 		LibraryItem[] searchResult;
 		int size=0;
 		int count=0;
 		for(int i=0; i<itemsCount; i++) {
-			if(items[i].getName().length()<input.length())
-				continue;
-			if(items[i].getName().substring(0,input.length()).equalsIgnoreCase(input))
+			itemName = items[i].getName().toLowerCase();
+			if(itemName.contains(input))
 				size++;
 		}
 		searchResult= new LibraryItem[size];
 		for(int i=0; i<itemsCount; i++) {
-			if(items[i].getName().length()<input.length())
-				continue;
-			if(items[i].getName().substring(0,input.length()).equalsIgnoreCase(input)) {
-				searchResult[count]= items[i];
+			itemName = items[i].getName().toLowerCase();
+			if(itemName.contains(input)) {
+				searchResult[count] = items[i];
 				count++;
 			}
 		}
@@ -113,7 +113,7 @@ public class Library {
 		requests[--requestsCount] = null;
 		return 1;
 	}
-	/* Method to deny and remove request to showcase manuscript based on passed index
+	/* Method to approve and remove request to showcase manuscript based on passed index
 	 1 = Request approved and removed
 	-1 = No requests to approve
 	-2 = Invalid input
