@@ -1,17 +1,24 @@
 package lpp;
 
 import lpp.item.LibraryItem;
+import lpp.AccountManager;
+import lpp.account.Author;
 
 public class Library {
 	
 	private String name;
 	private LibraryItem[] items;
 	private int itemsCount;
+	private LibraryItem[] requests;
+	private int requestsCount;
 	
 	public Library(String name, int capacity) {
-		this.name= name;
-		items= new LibraryItem[capacity];
-		itemsCount= 0;
+		this.name = name;
+		items = new LibraryItem[capacity];
+		itemsCount = 0;
+		requests = new LibraryItem[10];
+		requestsCount = 0;
+		
 	}
 	
 	public boolean addItem(LibraryItem i) {
@@ -28,7 +35,7 @@ public class Library {
 	public int removeItem(int index) {
 		if (itemsCount == 0)
 			return -1;
-		if (index<0 || index>itemsCount)
+		if (index<0 || index>=itemsCount)
 			return -2;
 		if (!items[index].isAvailable())
 			return -3;
@@ -84,5 +91,75 @@ public class Library {
 		}
 		return index;
 			
+	}
+	// Method that recieves manuscript showcasing requests from authors
+	public boolean addRequest(LibraryItem request) {
+		if(requestsCount == 10) 
+			return false;
+		requests[requestsCount++] = request.copyItem();
+		return true;
+	}
+	/* Method to deny and remove request to showcase manuscript based on passed index
+	 1 = Request denied and removed
+	-1 = No requests to deny
+	-2 = Invalid input  */
+	public int denyRequest(int index) {
+		if (requestsCount == 0)
+			return -1;
+		if (index<0 || index>=requestsCount)
+		for (int i=index; i<requestsCount-1; i++) {
+			requests[index] = requests[index+1];
+		}
+		requests[--requestsCount] = null;
+		return 1;
+	}
+	/* Method to deny and remove request to showcase manuscript based on passed index
+	 1 = Request approved and removed
+	-1 = No requests to approve
+	-2 = Invalid input
+	-3 = Items list is full  */
+	public int approveRequest(int index) {
+		if (requestsCount == 0)
+			return -1;
+		if (index<0 || index>=requestsCount)
+			return -2;
+		if (itemsCount == items.length)
+			return -3;
+		String authorName = requests[index].getAuthorName();
+		Author author = ((Author)AccountManager.getInstance().findAccount(authorName));
+		items[itemsCount++] = requests[index].copyItem();
+		author.showcaseManuscript();
+		denyRequest(index);
+		return 1;
+	}
+	
+	public boolean displayRequestsList() {
+		if (requestsCount == 10)
+			return false;
+		for(int i=0; i<requestsCount; i++) {
+			System.out.println(i+"- Showcase request by: "+requests[i].getAuthorName());
+		}
+		return true;
+		
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public LibraryItem[] getItems() {
+		return items;
+	}
+
+	public int getItemsCount() {
+		return itemsCount;
+	}
+
+	public LibraryItem[] getRequests() {
+		return requests;
+	}
+
+	public int getRequestsCount() {
+		return requestsCount;
 	}
 }

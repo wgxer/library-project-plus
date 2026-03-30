@@ -1,32 +1,39 @@
 package lpp.account;
 
+import lpp.Library;
 import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
 
 public class Author extends User {
 	
-	private int publishedBooks;
+	private int manuscriptsShowcased;
 	
 	
 	public Author(String username, String password, double balance) {
 		super(username, password, balance);
-		publishedBooks= 0;
+		manuscriptsShowcased= 0;
 	}
 	
 	public Author(User user) {
 		super(user);
-		publishedBooks= 0;
+		manuscriptsShowcased= 0;
 	}
 	
-	// publish a book, and then send request to administator to process
-	public void publishBook(int pages, String name) {
+	// Method that makes a Manuscript and submit request for showcasing to admin
+	public boolean submitManuscript(int pages, String name, Library library) {
+		if (library.getRequestsCount() == 10)
+			return false;
+		LibraryItem manuscript = new Manuscript(pages, name, this.getUsername(), 1);
+		library.addRequest(manuscript);
+		this.balance += manuscript.calculatePrice()/10;
+		return true;
      
 	}
-	/* borrowing for authors is mostly similar to normal users except they can borrow manuscripts
+	/* Borrowing for authors is mostly similar to normal users except they can borrow manuscripts
 	  1 = Item succefully borrowed
 	 -1 = Reached the borrowing limit
 	 -2 = Item is not available
-	 -3 = insufficient balance */
+	 -3 = Insufficient balance */
 	@Override
 	public int borrowItem(LibraryItem i) {
 		if (itemsCount == 5)
@@ -62,7 +69,15 @@ public class Author extends User {
 	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed during session", sessionBorrows);
 	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned during session", sessionReturns);
 	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred during session", sessionFees);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Books published", publishedBooks);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Manuscripts showcased", manuscriptsShowcased);
 	        System.out.println("╰─────────────────────────────────────────────────────────────────╯");
+	}
+	
+	public void showcaseManuscript() {
+		manuscriptsShowcased++;
+	}
+	
+	public int getManuscriptsShowcased() {
+		return manuscriptsShowcased;
 	}
 }

@@ -125,8 +125,11 @@ public class User extends Account implements Displayable{
 			
 	}
 	
-	public void addToBalance(Double value) {
+	public boolean addToBalance(Double value) {
+		if(value<=0 || value>5000)
+			return false;
 		balance += value;
+		return true;
 	}
 	
 	public void reset() {
