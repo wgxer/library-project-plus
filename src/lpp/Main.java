@@ -7,6 +7,7 @@ import lpp.account.Admin;
 import lpp.account.Author;
 import lpp.account.User;
 import lpp.item.Book;
+import lpp.item.Comment;
 import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
 
@@ -200,14 +201,13 @@ public class Main {
 		case 1:
 			LibraryItem[] requests = library.getRequests();
 			int requestsCount = library.getRequestsCount();
-			
+
 			if (requestsCount == 0) {
 				System.out.println("✘ No manuscript showcase requests, please recheck later !");
 				return;
 			}
-			
-			int requestIndex = selectLibraryItemMenu(input, requests, requestsCount,
-					"Manuscripts Showcase Requests");
+
+			int requestIndex = selectLibraryItemMenu(input, requests, requestsCount, "Manuscripts Showcase Requests");
 
 			if (requestIndex == -1) {
 				return;
@@ -274,7 +274,7 @@ public class Main {
 						System.out.println("! Something went wrong, please contact program developers.");
 						break;
 					}
-					
+
 					break;
 				case 3:
 					return;
@@ -473,7 +473,7 @@ public class Main {
 
 				LibraryItem selectedItem = borrowedItems[itemIndex];
 
-				if (!userItemOperationsMenu(input, selectedItem, user, "currently borrowed item")) {
+				if (!userItemOperationsMenu(input, selectedItem, user, "currently borrowed items")) {
 					tryAgain = true;
 				}
 			} while (tryAgain);
@@ -619,10 +619,14 @@ public class Main {
 		String errorMessageLine1 = null;
 		String errorMessageLine2 = null;
 
+		boolean askForOperations = false;
+
 		User itemUsedBy = item.getUsedBy();
 		boolean userHasItem = itemUsedBy != null && itemUsedBy.getUsername().equals(user.getUsername());
 
 		do {
+			askForOperations = false;
+
 			System.out.println();
 			item.display();
 
@@ -648,10 +652,12 @@ public class Main {
 			}
 
 			if (listName != null) {
-				System.out.printf("│  2. Back to %-30s │%n", listName);
-				System.out.println("│  3. Back to user operations                │");
+				if (item instanceof Manuscript)
+					System.out.println("│  2. Show Comments                          │");
+				System.out.printf("│  3. Back to %-30s │%n", listName);
+				System.out.println("│  4. Back to user operations                │");
 			} else {
-				System.out.println("│  2. Back to user operations                │");
+				System.out.println("│  4. Back to user operations                │");
 			}
 
 			System.out.println("╰────────────────────────────────────────────╯");
@@ -710,15 +716,104 @@ public class Main {
 
 				break;
 			case 2:
+				if (!(item instanceof Manuscript)) {
+					errorMessageLine1 = "Invalid operation. please try again !";
+					break;
+				}
+
+				boolean isAuthor = user instanceof Author;
+				boolean isUsedByAuthor = isAuthor && item.getUsedBy() != null && item.getUsedBy().getUsername().equals(user.getUsername());
+
+				boolean tryAgain = false;
+				Manuscript manuscript = (Manuscript) item;
+
+
+				int commentIndex;
+
+				while (true) {
+					Comment[] comments = manuscript.getComments();
+					int commentsCount = manuscript.getCommentsCount();
+
+					System.out.println();
+					System.out.println("╭────────────────────────────────────────────╮");
+
+					if (tryAgain) {
+						System.out.println("│ ✘ Incorrect comment number, please enter   │");
+						System.out.println("│   a correct one.                           │");
+						System.out.println("│                                            │");
+						tryAgain = false;
+					}
+
+					System.out.printf("│ %-42s │%n", "Comments:");
+					
+					if (commentsCount == 0) {
+						System.out.println("│  No comments so far...                     │");
+					}
+
+					for (int i = 0; i < commentsCount; i++) {
+						Comment comment = comments[i];
+						int commentNumber = i + 1;
+
+						System.out.printf("│ %-42s │%n", commentNumber + ". A comment by " + comment.getCommenter());
+					}
+
+					System.out.println("│                                            │");
+					System.out.println("│  Type '-1' to go to back.                  │");
+
+					if (isUsedByAuthor) {
+						System.out.println("│  Type '-2' to add comments.                │");
+					}
+
+					System.out.println("╰────────────────────────────────────────────╯");
+					System.out.println();
+					System.out.print("» Enter the number of comment you want to see (or '-1' / '-2'): ");
+
+					int itemNumber = input.nextInt();
+					input.nextLine();
+					
+					if (isUsedByAuthor && itemNumber == -2) {
+						System.out.print("» Enter your new comment (or '!back'): ");
+						
+						String newComment = input.nextLine();
+						
+						if (newComment.equals("!back")) {
+							askForOperations = true;
+							break;
+						}
+						
+						manuscript.addComment(newComment);
+						continue;
+					}
+
+					if (itemNumber == -1) {
+						askForOperations = true;
+						break;
+					}
+
+					commentIndex = itemNumber - 1;
+					
+					if (commentIndex < 0 || commentIndex >= commentsCount) {
+						tryAgain = true;
+					} else {
+						comments[commentIndex].display();
+					}
+				}
+
+				if (askForOperations) {
+					break;
+				}
+
+				break;
+			case 3:
 				if (listName != null)
 					return false;
-			case 3:
+			case 4:
 				break;
 			default:
 				errorMessageLine1 = "Invalid operation. please try again !";
 				break;
 			}
-		} while (errorMessageLine1 != null);
+		} while (errorMessageLine1 != null || askForOperations);
 
 		return true;
 	}
