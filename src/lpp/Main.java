@@ -14,7 +14,7 @@ import lpp.item.Manuscript;
 public class Main {
 	public static void main(String[] args) {
 		AccountManager accountManager = AccountManager.getInstance();
-		Library library = new Library("Test Library", 100);
+		Library library = new Library("Library", 1000);
 
 		library.addItem(new Book(56, "abcdef", "Unknown", 2016));
 		library.addItem(new Book(105, "Ahmed's ABC book", "Ahmed", 2019));
@@ -187,9 +187,13 @@ public class Main {
 		System.out.println("╭─────────────────────────────────────────╮");
 		System.out.println("│ Admin Operations:                       │");
 		System.out.println("│  1. Manage manuscript showcase requests │");
-		System.out.println("│  2. Upgrade a user to author            │");
-		System.out.println("│  3. Statistics                          │");
-		System.out.println("│  4. Logout                              │");
+		System.out.println("│  2. Add balance to user account         │");
+		System.out.println("│  3. Upgrade a user to author            │");
+		System.out.println("│  4. View user statistics                │");
+		System.out.println("│  5. Change user password                │");
+		System.out.println("│  6. Add book                            │");
+		System.out.println("│  7. Statistics                          │");
+		System.out.println("│  8. Logout                              │");
 		System.out.println("╰─────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter the number of operation: ");
@@ -286,6 +290,9 @@ public class Main {
 
 			break;
 		case 2:
+		case 3:
+		case 4:
+		case 5:
 			do {
 				System.out.println("╭────────────────────────────────────────────╮");
 
@@ -296,7 +303,16 @@ public class Main {
 					tryAgain = false;
 				}
 
-				System.out.println("│ Upgrade User to Author:                    │");
+				if (adminOperation == 2) {
+					System.out.println("│ Add Balance:                               │");
+				} else if (adminOperation == 3) {
+					System.out.println("│ Upgrade User to Author:                    │");
+				} else if (adminOperation == 4) {
+					System.out.println("│ View User Statistics:                      │");
+				} else if (adminOperation == 5) {
+					System.out.println("│ Change User Password:                      │");
+				}
+
 				System.out.println("│  Username: [░░░░░░░░░░░░]                  │");
 				System.out.println("│                                            │");
 
@@ -311,27 +327,109 @@ public class Main {
 					break;
 				}
 
-				switch (admin.upgradeUser(username)) {
-				case 0:
-					System.out.println("✔ User '" + username + "' has been upgraded successfully to author !");
+				if (adminOperation == 2) {
+					System.out.print("» Enter amount to add/remove (negative to remove, '0' to cancel): ");
+					double balanceToAdd = input.nextDouble();
+
+					if (balanceToAdd == 0) {
+						break;
+					}
+
+					Account userAccount = accountManager.findAccount(username);
+
+					if (userAccount instanceof User) {
+						((User) userAccount).addToBalance(balanceToAdd);
+						System.out.printf("✔ '%s' balance has been increased by %.2f succesfully !%n", username, balanceToAdd);
+					} else {
+						System.out.println("✘ Account '" + username + "' is not a user !");
+					}
+
 					break;
-				case -1:
-					tryAgain = true;
+				} else if (adminOperation == 3) {
+					switch (admin.upgradeUser(username)) {
+					case 0:
+						System.out.println("✔ User '" + username + "' has been upgraded successfully to author !");
+						break;
+					case -1:
+						tryAgain = true;
+						break;
+					case -2:
+						System.out.println("✘ Account '" + username + "' is not a user !");
+						break;
+					case -3:
+						System.out.println("✘ Account '" + username + "' is already an author !");
+						break;
+					default:
+						System.out.println("! Something went wrong, please report to program authors !");
+						break;
+					}
+				} else if(adminOperation == 4) {
+					Account userAccount = accountManager.findAccount(username);
+
+					if (userAccount instanceof User) {
+						((User) userAccount).display();
+					} else {
+						System.out.println("✘ Account '" + username + "' is not a user !");
+					}
+
 					break;
-				case -2:
-					System.out.println("✘ Account '" + username + "' is not a user !");
-					break;
-				case -3:
-					System.out.println("✘ Account '" + username + "' is already an author !");
-					break;
-				default:
-					System.out.println("! Something went wrong, please report to program authors !");
+				} else {
+					System.out.print("» Enter new password ('!cancel' to cancel): ");
+					String newPassword = input.next();
+
+					if (newPassword.equals("!cancel")) {
+						break;
+					}
+
+					accountManager.findAccount(username).setPassword(newPassword);
+					System.out.println("✔ '" + username + "' password has been updated sucessfully !");
+
 					break;
 				}
 			} while (tryAgain);
 
 			break;
-		case 3:
+		case 6:
+			System.out.print("» Enter new book name (or '!cancel' to cancel): ");
+			String newBookName = input.nextLine();
+
+			if (newBookName.equals("!cancel")) {
+				break;
+			}
+			
+			System.out.print("» Enter new book author name (or '!cancel' to cancel): ");
+			String newBookAuthorName = input.nextLine();
+
+			if (newBookAuthorName.equals("!cancel")) {
+				break;
+			}
+			
+			System.out.print("» Enter new book pages (or '-1' to cancel): ");
+			int newBookPages = input.nextInt();
+			
+			if (newBookPages == -1) {
+				break;
+			} else if (newBookPages <= 0) {
+				System.out.println("✘ Invalid pages.");
+				break;
+			}
+			
+			System.out.print("» Enter new book publication year (or '-1' to cancel): ");
+			int newBookPublicationYear = input.nextInt();
+			
+			if (newBookPublicationYear == -1) {
+				break;
+			} else if (newBookPublicationYear < 0) {
+				System.out.println("✘ Invalid publication year.");
+				break;
+			}
+			
+			if (library.addItem(new Book(newBookPages, newBookName, newBookAuthorName, newBookPublicationYear))) {
+				System.out.println("✘ Library is full.");
+			}
+			
+			break;
+		case 7:
 			System.out.println("╭────────────────────────────────────────╮");
 			System.out.println("│ Statistics:                            │");
 			System.out.printf("│  Total Borrows: %-22d │%n", Admin.getTotalBorrows());
@@ -340,7 +438,7 @@ public class Main {
 			System.out.println("╰────────────────────────────────────────╯");
 
 			break;
-		case 4:
+		case 8:
 			System.out.println("- Goodbye, " + admin.getUsername() + " !");
 			accountManager.logout();
 
@@ -650,7 +748,7 @@ public class Main {
 			} else {
 				System.out.println("│  1. Borrow                                 │");
 			}
-			
+
 			System.out.println("│  2. Give a rating                          │");
 
 			if (listName != null) {
@@ -659,7 +757,7 @@ public class Main {
 
 				System.out.printf("│  4. Back to %-30s │%n", listName);
 			}
-			
+
 			System.out.println("│  5. Back to user operations                │");
 			System.out.println("╰────────────────────────────────────────────╯");
 			System.out.println();
@@ -720,20 +818,19 @@ public class Main {
 				while (true) {
 					System.out.print("» Enter your rating from 1 to 5 (or '-1' to go back): ");
 					int newRating = input.nextInt();
-					
+
 					if (newRating == -1) {
 						break;
 					}
-					
-					
+
 					if (item.reviewItem(newRating)) {
 						System.out.println("» This item has been rated at " + newRating + "/5 successfully !");
 						break;
 					}
-					
+
 					System.out.println("✘ Incorrect rating, please try again !");
 				}
-				
+
 				break;
 			case 3:
 				if (!(item instanceof Manuscript)) {
