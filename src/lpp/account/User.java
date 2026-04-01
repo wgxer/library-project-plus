@@ -9,9 +9,9 @@ public class User extends Account implements Displayable{
 	protected double balance;
 	protected LibraryItem[] borrowedItems;
 	protected int itemsCount;
-	protected int sessionBorrows;
-	protected int sessionReturns;
-	protected double sessionFees;
+	protected int borrows;
+	protected int returns;
+	protected double fees;
 	
 	public User(String username, String password, double balance) {
 		super(username, password);
@@ -20,9 +20,9 @@ public class User extends Account implements Displayable{
 		borrowedItems= new LibraryItem[5];
 		itemsCount=0;
 		
-		sessionBorrows=0;
-		sessionReturns=0;
-		sessionFees=0;
+		borrows=0;
+		returns=0;
+		fees=0;
 	}
 	
 	public User(User other) {
@@ -32,8 +32,8 @@ public class User extends Account implements Displayable{
 		this.borrowedItems = other.borrowedItems;
 		this.itemsCount = other.itemsCount;
 		
-		this.sessionBorrows = other.sessionBorrows;
-		this.sessionReturns = other.sessionReturns;
+		this.borrows = other.borrows;
+		this.returns = other.returns;
 	}
 	
 	/* Regular users may only borrow books
@@ -58,10 +58,10 @@ public class User extends Account implements Displayable{
 		
 		borrowedItems[itemsCount] = b;
 		itemsCount++;
-		sessionBorrows++;
+		borrows++;
 		
 		balance -= price;
-		sessionFees += price;
+		fees += price;
 		
 		Admin.recordBorrow();
 		Admin.recordRevenue(price);
@@ -92,7 +92,7 @@ public class User extends Account implements Displayable{
 		}
 		borrowedItems[itemsCount-1]= null;
 		b.returnItem();
-		sessionReturns++;
+		returns++;
 		itemsCount--;
 		
 		Admin.recordReturn();
@@ -109,9 +109,9 @@ public class User extends Account implements Displayable{
 	        System.out.printf ("│ %-30s : %-30s │\n", "Username", getUsername());
 	        System.out.printf ("│ %-30s : %-30.2f │\n", "Balance", balance);
 	        System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", itemsCount);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed during session", sessionBorrows);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned during session", sessionReturns);
-	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred during session", sessionFees);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed", borrows);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned", returns);
+	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred", fees);
 	        System.out.println("╰─────────────────────────────────────────────────────────────────╯");
 	}
 	
@@ -130,12 +130,6 @@ public class User extends Account implements Displayable{
 			return false;
 		balance += value;
 		return true;
-	}
-	
-	public void reset() {
-		sessionBorrows=0;
-		sessionReturns=0;
-		sessionFees=0;
 	}
 	
 	public double getBalance() {
