@@ -32,25 +32,25 @@ public class Author extends User {
 	/* Borrowing for authors is mostly similar to normal users except they can borrow manuscripts
 	  1 = Item succefully borrowed
 	 -1 = Reached the borrowing limit
-	 -2 = Item is not available
-	 -3 = Insufficient balance */
+	 -3 = Item is not available
+	 -4 = Insufficient balance */
 	@Override
 	public int borrowItem(LibraryItem i) {
 		if (itemsCount == 5)
 			return -1;;
 		if(!i.isAvailable())
-			return -2;
+			return -3;
 		double price = i.calculatePrice();
 		
 		if(balance < price)
-			return -3;
+			return -4;
 		
 		borrowedItems[itemsCount] = i;
 		itemsCount++;
-		sessionBorrows++;
+		borrows++;
 		
 		balance -= price;
-		sessionFees += price;
+		fees += price;
 		
 		Admin.recordBorrow();
 		Admin.recordRevenue(price);
@@ -66,9 +66,9 @@ public class Author extends User {
 	        System.out.printf ("│ %-30s : %-30s │\n", "Username", getUsername());
 	        System.out.printf ("│ %-30s : %-30.2f │\n", "Balance", balance);
 	        System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", itemsCount);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed during session", sessionBorrows);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned during session", sessionReturns);
-	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred during session", sessionFees);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed", borrows);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned", returns);
+	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred", fees);
 	        System.out.printf ("│ %-30s : %-30d │\n", "Manuscripts showcased", manuscriptsShowcased);
 	        System.out.println("╰─────────────────────────────────────────────────────────────────╯");
 	}
