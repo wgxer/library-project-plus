@@ -13,16 +13,16 @@ public class Main {
 	public static void main(String[] args) {
 		AccountManager accountManager = AccountManager.getInstance();
 		Library library = new Library("Test Library", 100);
-		
+
 		library.addItem(new Book(56, "abcdef", "Unknown", 2016));
 		library.addItem(new Book(105, "Ahmed's ABC book", "Ahmed", 2019));
-		
+
 		accountManager.addAccount(new Admin("admin", "admin"));
 		accountManager.addAccount(new User("user", "user123", 10.0));
-		
+
 		Scanner input = new Scanner(System.in);
 		new Book(3, "ABC", "Ahmed", 2024).display();
-		
+
 		System.out.println("╭────────────────────────────────────────╮");
 		System.out.println("│                                        │");
 		System.out.println("│ Welcome to Library Management System ! │");
@@ -31,7 +31,7 @@ public class Main {
 
 		while (true) {
 			Account account = AccountManager.getInstance().getCurrentAccount();
-			
+
 			if (account == null) {
 				showLoginMenu(input);
 			} else if (account instanceof Admin) {
@@ -41,10 +41,10 @@ public class Main {
 			}
 		}
 	}
-	
+
 	private static void showLoginMenu(Scanner input) {
 		AccountManager accountManager = AccountManager.getInstance();
-		
+
 		System.out.println();
 		System.out.println("╭────────────────────────────────────────╮");
 		System.out.println("│ Login:                                 │");
@@ -55,53 +55,53 @@ public class Main {
 		System.out.println("╰────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter username (or '!signup'): ");
-		
+
 		String loginUsername = input.next();
-		
+
 		if (loginUsername.equals("!signup")) {
 			showSignupMenu(input);
 			return;
 		}
-		
+
 		System.out.println();
 		System.out.println("╭────────────────────────────────────────╮");
 		System.out.println("│ Login:                                 │");
-		System.out.println("│  Username: " + loginUsername.substring(0, Math.min(loginUsername.length(), 27)) + " ".repeat(Math.max(0, 27 - loginUsername.length())) + " │");
+		System.out.printf("│  Username: %-27s │%n", loginUsername);
 		System.out.println("│  Password: [░░░░░░░░░░░░]              │");
 		System.out.println("╰────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter password: ");
-		
+
 		String password = input.next();
-		
+
 		if (!accountManager.login(loginUsername, password)) {
 			System.out.println("✘ Incorrect username/password, please try again !");
 			System.out.println();
-			
+
 			return;
 		}
-		
+
 		System.out.println("✔ Welcome " + accountManager.getCurrentAccount().getUsername() + " to library !");
 	}
-	
+
 	private static void showSignupMenu(Scanner input) {
 		AccountManager accountManager = AccountManager.getInstance();
 
 		boolean tryAgain = false;
 		String username;
-		
+
 		do {
 			System.out.println();
 			System.out.println("╭────────────────────────────────────────────╮");
-			
+
 			if (tryAgain) {
 				System.out.println("│ ✘ A user with that username already        │");
 				System.out.println("│   exists, please choose another username   │");
 				System.out.println("│                                            │");
-				
+
 				tryAgain = false;
 			}
-			
+
 			System.out.println("│ Signup:                                    │");
 			System.out.println("│  Username: [░░░░░░░░░░░░]                  │");
 			System.out.println("│                                            │");
@@ -109,31 +109,31 @@ public class Main {
 			System.out.println("╰────────────────────────────────────────────╯");
 			System.out.println();
 			System.out.print("» Enter username (or '!cancel'): ");
-			
+
 			username = input.next();
-			
+
 			if (username.equals("!cancel")) {
 				return;
 			} else if (accountManager.findAccount(username) != null) {
 				tryAgain = true;
 				continue;
 			}
-		} while(tryAgain);
-		
+		} while (tryAgain);
+
 		String password;
-		
+
 		do {
 			System.out.println();
 			System.out.println("╭────────────────────────────────────────────╮");
-			
+
 			if (tryAgain) {
 				System.out.println("│ ✘ Password doesn't match with confirm      │");
 				System.out.println("│   password, please ensure they're equal    │");
 				System.out.println("│                                            │");
-				
+
 				tryAgain = false;
 			}
-			
+
 			System.out.println("│ Signup:                                    │");
 			System.out.println("│  Password: [░░░░░░░░░░░░]                  │");
 			System.out.println("│  Confirm Password: [            ]          │");
@@ -142,11 +142,12 @@ public class Main {
 			System.out.println("╰────────────────────────────────────────────╯");
 			System.out.println();
 			System.out.print("» Enter password (or '!cancel'): ");
-			
+
 			password = input.next();
-			
-			if (password.equals("!cancel")) return;
-			
+
+			if (password.equals("!cancel"))
+				return;
+
 			System.out.println();
 			System.out.println("╭────────────────────────────────────────────╮");
 			System.out.println("│ Signup:                                    │");
@@ -155,12 +156,12 @@ public class Main {
 			System.out.println("╰────────────────────────────────────────────╯");
 			System.out.println();
 			System.out.print("» Enter your password again: ");
-			
+
 			if (!password.equals(input.next())) {
 				tryAgain = true;
 			}
 		} while (tryAgain);
-		
+
 		switch (accountManager.addAccount(new User(username, password, 0))) {
 		case 0:
 			System.out.println("✔ Welcome " + username + " to library for first time!");
@@ -175,7 +176,7 @@ public class Main {
 			break;
 		}
 	}
-	
+
 	private static void showAdminMenu(Scanner input, Library library, Admin admin) {
 		AccountManager accountManager = AccountManager.getInstance();
 
@@ -189,43 +190,42 @@ public class Main {
 		System.out.println("╰────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter the number of operation: ");
-		
+
 		int operation = input.nextInt();
-		
+
 		switch (operation) {
 		case 1:
 			System.out.println("! Sorry, this service is temporarily unavaliable, please try again later.");
 			return;
 		case 2:
 			boolean tryAgain = false;
-			
+
 			do {
 				System.out.println("╭────────────────────────────────────────────╮");
-				
+
 				if (tryAgain) {
 					System.out.println("│ ✘ Incorrect username, please try again !   │");
 					System.out.println("│                                            │");
-					
+
 					tryAgain = false;
 				}
-				
+
 				System.out.println("│ Upgrade User to Author:                    │");
 				System.out.println("│  Username: [░░░░░░░░░░░░]                  │");
 				System.out.println("│                                            │");
-				
-				
+
 				System.out.println("│ Type '!cancel' to go back                  │");
 				System.out.println("╰────────────────────────────────────────────╯");
 				System.out.println();
 				System.out.print("» Enter username (or '!cancel'): ");
-				
+
 				String username = input.next();
-				
+
 				if (username.equals("!cancel")) {
 					break;
 				}
-				
-				switch(admin.upgradeUser(username)) {
+
+				switch (admin.upgradeUser(username)) {
 				case 0:
 					System.out.println("✔ User '" + username + "' has been upgraded successfully to author !");
 					break;
@@ -243,7 +243,7 @@ public class Main {
 					break;
 				}
 			} while (tryAgain);
-			
+
 			break;
 		case 3:
 			System.out.println("╭────────────────────────────────────────╮");
@@ -252,19 +252,19 @@ public class Main {
 			System.out.printf("│  Total Returns: %-22d │%n", Admin.getTotalReturns());
 			System.out.printf("│  Total Revenue: %-22.2f │%n", Admin.getTotalRevenue());
 			System.out.println("╰────────────────────────────────────────╯");
-			
+
 			break;
 		case 4:
 			System.out.println("- Goodbye, " + admin.getUsername() + " !");
 			accountManager.logout();
-			
+
 			break;
 		default:
 			System.out.println("✘ Invalid operation, please try again !");
 			break;
 		}
 	}
-	
+
 	private static void showUserMenu(Scanner input, Library library, User user) {
 		AccountManager accountManager = AccountManager.getInstance();
 		boolean isAuthor = user instanceof Author;
@@ -272,145 +272,166 @@ public class Main {
 		System.out.println();
 		System.out.println("╭────────────────────────────────────────╮");
 		System.out.println("│ User Operations:                       │");
-		System.out.println("│  1. Search for library items           │");
-		System.out.println("│  2. Return a library item              │");
-		System.out.println("│  3. Statistics                         │");
-		
+		System.out.println("│  1. View all library items             │");
+		System.out.println("│  2. Search for library items           │");
+		System.out.println("│  3. Return a library item              │");
+		System.out.println("│  4. Statistics                         │");
+
 		if (isAuthor) {
-			System.out.println("│  4. Review manuscripts                 │");
-			System.out.println("│  5. Book publishing                    │");
-			System.out.println("│  6. Logout                             │");
+			System.out.println("│  5. Review manuscripts                 │");
+			System.out.println("│  6. Book publishing                    │");
+			System.out.println("│  7. Logout                             │");
 		} else {
-			System.out.println("│  4. Logout                             │");
+			System.out.println("│  5. Logout                             │");
 		}
-		
+
 		System.out.println("╰────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter the number of operation: ");
-		
+
 		int userOperation = input.nextInt();
 		boolean tryAgain = false;
-		
+
 		switch (userOperation) {
 		case 1:
-			LibraryItem[] searchResults;
+		case 2:
+			LibraryItem[] libraryItems;
+			int libraryItemsCount;
+
+			if (userOperation == 1) {
+				libraryItems = library.getItems();
+				libraryItemsCount = library.getItemsCount();
+			} else {
+				do {
+					System.out.println("╭────────────────────────────────────────╮");
+
+					if (tryAgain) {
+						System.out.println("│ ✘ No library items matching search     │");
+						System.out.println("│   prompt were found                    │");
+						System.out.println("│                                        │");
+						tryAgain = false;
+					}
+
+					System.out.println("│ Search by title:                       │");
+					System.out.println("│  [░░░░░░░░░░░░░░░░░░░░░░░░░]           │");
+					System.out.println("│                                        │");
+					System.out.println("│  Type '!back' to go back.              │");
+					System.out.println("╰────────────────────────────────────────╯");
+					System.out.println();
+					System.out.print("» Enter search prompt (or '!back'): ");
+
+					String searchPrompt = input.next();
+
+					if (searchPrompt.equals("!back")) {
+						return;
+					}
+
+					libraryItems = library.searchItem(searchPrompt);
+					libraryItemsCount = libraryItems.length;
+
+					if (libraryItemsCount == 0) {
+						tryAgain = true;
+					}
+				} while (tryAgain);
+			}
+
+			boolean backToLibraryItems;
 
 			do {
-				System.out.println("╭────────────────────────────────────────╮");
-				
-				if (tryAgain) {
-					System.out.println("│ ✘ No library items matching search     │");
-					System.out.println("│   prompt were found                    │");
-					System.out.println("│                                        │");
-					tryAgain = false;
-				}
-				
-				System.out.println("│ Search by title:                       │");
-				System.out.println("│  [░░░░░░░░░░░░░░░░░░░░░░░░░]           │");
-				System.out.println("│                                        │");
-				System.out.println("│  Type '!back' to go back.              │");
-				System.out.println("╰────────────────────────────────────────╯");
-				System.out.println();
-				System.out.print("» Enter search prompt (or '!back'): ");
-	
-				String searchPrompt = input.next();
-				
-				if (searchPrompt.equals("!back")) {
-					return;
-				}
-				
-				searchResults = library.searchItem(searchPrompt);
-				
-				if (searchResults.length == 0) {
-					tryAgain = true;
-				}
-			} while (tryAgain);
-			
-			boolean backToSearchResults;
-			
-			do {
-				backToSearchResults = false;
+				backToLibraryItems = false;
 				int itemIndex;
-				
+
 				do {
 					System.out.println();
 					System.out.println("╭────────────────────────────────────────────╮");
-					
+
 					if (tryAgain) {
 						System.out.println("│ ✘ Incorrect library item number, please    │");
 						System.out.println("│   enter a correct one.                     │");
 						System.out.println("│                                            │");
 						tryAgain = false;
 					}
-					
-					System.out.println("│ Search Results:                            │");
-					
-					for (int i = 0; i < searchResults.length; i++) {
-						LibraryItem item = searchResults[i];
-						
+
+					if (userOperation == 1) {
+						System.out.println("│ Library Items:                             │");
+					} else {						
+						System.out.println("│ Search Results:                            │");
+					}
+
+					for (int i = 0; i < libraryItemsCount; i++) {
+						LibraryItem item = libraryItems[i];
+
 						int avaliableSpaceForVariables = 40;
-						
+
 						String numberString = String.valueOf(i + 1);
 						avaliableSpaceForVariables -= numberString.length();
-						
+
 						String itemTitle = item.getName();
-						String displayedItemTitle = itemTitle.substring(0, Math.min(itemTitle.length(), avaliableSpaceForVariables));
+						String displayedItemTitle = itemTitle.substring(0,
+								Math.min(itemTitle.length(), avaliableSpaceForVariables));
 						avaliableSpaceForVariables -= displayedItemTitle.length();
-						
-						System.out.println("│ " + numberString + ". " + displayedItemTitle + " ".repeat(avaliableSpaceForVariables) + " │");
+
+						System.out.println("│ " + numberString + ". " + displayedItemTitle
+								+ " ".repeat(avaliableSpaceForVariables) + " │");
 					}
-					
+
 					System.out.println("│                                            │");
 					System.out.println("│  Type '-1' to go to opeartions menu.       │");
 					System.out.println("╰────────────────────────────────────────────╯");
 					System.out.println();
 					System.out.print("» Enter the number of library item you want to open (or '-1'): ");
-					
+
 					int itemNumber = input.nextInt();
-					
+
 					if (itemNumber == -1) {
 						return;
-					} 
-					
+					}
+
 					itemIndex = itemNumber - 1;
-					
-					if (itemIndex < 0 || itemIndex >= searchResults.length) {
-						tryAgain = true;	
+
+					if (itemIndex < 0 || itemIndex >= libraryItemsCount) {
+						tryAgain = true;
 					}
 				} while (tryAgain);
-				
-				LibraryItem selectedItem = searchResults[itemIndex];
-				
+
+				LibraryItem selectedItem = libraryItems[itemIndex];
+
 				String errorMessageLine1 = null;
 				String errorMessageLine2 = null;
-				
+
 				do {
 					System.out.println();
 					selectedItem.display();
-					
-					System.out.println("╭────────────────────────────────────────────╮");					
-	
+
+					System.out.println("╭────────────────────────────────────────────╮");
+
 					if (errorMessageLine1 != null) {
 						System.out.printf("│ ✘ %-40s │%n", errorMessageLine1);
-						if (errorMessageLine2 != null) System.out.printf("│   %-40s │%n", errorMessageLine2);
-						
+						if (errorMessageLine2 != null)
+							System.out.printf("│   %-40s │%n", errorMessageLine2);
+
 						System.out.println("│                                            │");
-						
+
 						errorMessageLine1 = null;
 						errorMessageLine2 = null;
 					}
-					
-					
+
 					System.out.println("│ Library Item Operations:                   │");
 					System.out.println("│  1. Borrow                                 │");
-					System.out.println("│  2. Back to Search Results                 │");
+					
+					if (userOperation == 1) {
+						System.out.println("│  2. Back to Libray Items                   │");
+					} else {
+						System.out.println("│  2. Back to Search Results                 │");
+					}
+					
 					System.out.println("│  3. Back to User Operations                │");
 					System.out.println("╰────────────────────────────────────────────╯");
 					System.out.println();
 					System.out.print("» Enter the operation number: ");
-					
+
 					int itemOperation = input.nextInt();
-					
+
 					switch (itemOperation) {
 					case 1:
 						switch (user.borrowItem(selectedItem)) {
@@ -436,23 +457,26 @@ public class Main {
 							errorMessageLine2 = "to program developers.";
 							break;
 						}
-						
+
 						break;
 					case 2:
-						backToSearchResults = true;
+						backToLibraryItems = true;
 						break;
 					case 3:
 						return;
+					default:
+						errorMessageLine1 = "Invalid operation. please try again !";
+						break;
 					}
 				} while (errorMessageLine1 != null);
-			} while(backToSearchResults);
-			
+			} while (backToLibraryItems);
+
 			return;
-		case 2:
+		case 3:
 			int itemIndex;
 			LibraryItem[] borrowedItems = user.getBorrowedItems();
 			int itemsCount = user.getItemsCount();
-			
+
 			if (itemsCount == 0) {
 				System.out.println("✘ You don't have any borrowed items to return.");
 				return;
@@ -461,77 +485,80 @@ public class Main {
 			do {
 				System.out.println();
 				System.out.println("╭────────────────────────────────────────────╮");
-				
+
 				if (tryAgain) {
 					System.out.println("│ ✘ Incorrect library item number, please    │");
 					System.out.println("│   enter a correct one.                     │");
 					System.out.println("│                                            │");
 					tryAgain = false;
 				}
-				
+
 				System.out.println("│ Currently Borrowed Items:                  │");
-				
+
 				for (int i = 0; i < itemsCount; i++) {
 					LibraryItem item = borrowedItems[i];
 					int avaliableSpaceForVariables = 40;
-					
+
 					String numberString = String.valueOf(i + 1);
 					avaliableSpaceForVariables -= numberString.length();
-					
+
 					String itemTitle = item.getName();
-					String displayedItemTitle = itemTitle.substring(0, Math.min(itemTitle.length(), avaliableSpaceForVariables));
+					String displayedItemTitle = itemTitle.substring(0,
+							Math.min(itemTitle.length(), avaliableSpaceForVariables));
 					avaliableSpaceForVariables -= displayedItemTitle.length();
-					
-					System.out.println("│ " + numberString + ". " + displayedItemTitle + " ".repeat(avaliableSpaceForVariables) + " │");
+
+					System.out.println("│ " + numberString + ". " + displayedItemTitle
+							+ " ".repeat(avaliableSpaceForVariables) + " │");
 				}
-				
+
 				System.out.println("│                                            │");
 				System.out.println("│  Type '-1' to go back.                     │");
 				System.out.println("╰────────────────────────────────────────────╯");
 				System.out.println();
 				System.out.print("» Enter the number of library item you want to return (or '-1'): ");
-				
+
 				int itemNumber = input.nextInt();
-				
+
 				if (itemNumber == -1) {
 					return;
-				} 
-				
+				}
+
 				itemIndex = itemNumber - 1;
-				
+
 				if (itemIndex < 0 || itemIndex >= itemsCount) {
 					tryAgain = true;
 				}
 			} while (tryAgain);
-				
+
 			LibraryItem selectedItem = borrowedItems[itemIndex];
-			
+
 			if (user.returnItem(selectedItem) == 1) {
 				System.out.println("✔ '" + selectedItem.getName() + "' has been returned successfully !");
 			} else {
-				System.out.println("! Item couldn't be returned due to system issues, please contact library adminstrators.");
+				System.out.println(
+						"! Item couldn't be returned due to system issues, please contact library adminstrators.");
 			}
-				
-			break;
-		case 3:
-			user.display();
+
 			break;
 		case 4:
+			user.display();
+			break;
+		case 5:
 			if (!isAuthor) {
 				System.out.println("- Goodbye, " + user.getUsername() + " !");
 				accountManager.logout();
 			}
-			
+
 			break;
-		case 5:
+		case 6:
 			if (isAuthor) {
 				break;
 			}
-		case 6:
+		case 7:
 			if (isAuthor) {
 				System.out.println("- Goodbye, " + user.getUsername() + " !");
 				accountManager.logout();
-				
+
 				break;
 			}
 		default:
