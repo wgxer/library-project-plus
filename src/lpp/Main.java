@@ -274,7 +274,7 @@ public class Main {
 		System.out.println("│ User Operations:                       │");
 		System.out.println("│  1. View all library items             │");
 		System.out.println("│  2. Search for library items           │");
-		System.out.println("│  3. Return a library item              │");
+		System.out.println("│  3. View currently borrowed items      │");
 		System.out.println("│  4. Statistics                         │");
 
 		if (isAuthor) {
@@ -341,203 +341,49 @@ public class Main {
 				backToLibraryItems = false;
 				int itemIndex;
 
-				do {
-					System.out.println();
-					System.out.println("╭────────────────────────────────────────────╮");
+				String listName = "Library Items";
 
-					if (tryAgain) {
-						System.out.println("│ ✘ Incorrect library item number, please    │");
-						System.out.println("│   enter a correct one.                     │");
-						System.out.println("│                                            │");
-						tryAgain = false;
-					}
+				if (userOperation == 2)
+					listName = "Search Results";
 
-					if (userOperation == 1) {
-						System.out.println("│ Library Items:                             │");
-					} else {						
-						System.out.println("│ Search Results:                            │");
-					}
+				itemIndex = selectLibraryItemMenu(input, libraryItems, libraryItemsCount, listName);
 
-					for (int i = 0; i < libraryItemsCount; i++) {
-						LibraryItem item = libraryItems[i];
-
-						int avaliableSpaceForVariables = 40;
-
-						String numberString = String.valueOf(i + 1);
-						avaliableSpaceForVariables -= numberString.length();
-
-						String itemTitle = item.getName();
-						String displayedItemTitle = itemTitle.substring(0,
-								Math.min(itemTitle.length(), avaliableSpaceForVariables));
-						avaliableSpaceForVariables -= displayedItemTitle.length();
-
-						System.out.println("│ " + numberString + ". " + displayedItemTitle
-								+ " ".repeat(avaliableSpaceForVariables) + " │");
-					}
-
-					System.out.println("│                                            │");
-					System.out.println("│  Type '-1' to go to opeartions menu.       │");
-					System.out.println("╰────────────────────────────────────────────╯");
-					System.out.println();
-					System.out.print("» Enter the number of library item you want to open (or '-1'): ");
-
-					int itemNumber = input.nextInt();
-
-					if (itemNumber == -1) {
-						return;
-					}
-
-					itemIndex = itemNumber - 1;
-
-					if (itemIndex < 0 || itemIndex >= libraryItemsCount) {
-						tryAgain = true;
-					}
-				} while (tryAgain);
+				if (itemIndex == -1) {
+					return;
+				}
 
 				LibraryItem selectedItem = libraryItems[itemIndex];
 
-				String errorMessageLine1 = null;
-				String errorMessageLine2 = null;
-
-				do {
-					System.out.println();
-					selectedItem.display();
-
-					System.out.println("╭────────────────────────────────────────────╮");
-
-					if (errorMessageLine1 != null) {
-						System.out.printf("│ ✘ %-40s │%n", errorMessageLine1);
-						if (errorMessageLine2 != null)
-							System.out.printf("│   %-40s │%n", errorMessageLine2);
-
-						System.out.println("│                                            │");
-
-						errorMessageLine1 = null;
-						errorMessageLine2 = null;
-					}
-
-					System.out.println("│ Library Item Operations:                   │");
-					System.out.println("│  1. Borrow                                 │");
-					
-					if (userOperation == 1) {
-						System.out.println("│  2. Back to Libray Items                   │");
-					} else {
-						System.out.println("│  2. Back to Search Results                 │");
-					}
-					
-					System.out.println("│  3. Back to User Operations                │");
-					System.out.println("╰────────────────────────────────────────────╯");
-					System.out.println();
-					System.out.print("» Enter the operation number: ");
-
-					int itemOperation = input.nextInt();
-
-					switch (itemOperation) {
-					case 1:
-						switch (user.borrowItem(selectedItem)) {
-						case 1:
-							System.out.println("✔ '" + selectedItem.getName() + "' has been borrowed successfully !");
-							break;
-						case -1:
-							errorMessageLine1 = "No more than 5 items can be borrowed";
-							errorMessageLine2 = "at the same time.";
-							break;
-						case -2:
-							errorMessageLine1 = "Manuscripts can't be borrowed.";
-							break;
-						case -3:
-							errorMessageLine1 = "Item is not avaliable right now,";
-							errorMessageLine2 = "please try later.";
-							break;
-						case -4:
-							errorMessageLine1 = "Insufficient balance.";
-							break;
-						default:
-							errorMessageLine1 = "Something went wrong, please report";
-							errorMessageLine2 = "to program developers.";
-							break;
-						}
-
-						break;
-					case 2:
-						backToLibraryItems = true;
-						break;
-					case 3:
-						return;
-					default:
-						errorMessageLine1 = "Invalid operation. please try again !";
-						break;
-					}
-				} while (errorMessageLine1 != null);
+				if (!userItemOperationsMenu(input, selectedItem, user, listName)) {
+					backToLibraryItems = true;
+				}
 			} while (backToLibraryItems);
 
 			return;
 		case 3:
-			int itemIndex;
-			LibraryItem[] borrowedItems = user.getBorrowedItems();
-			int itemsCount = user.getItemsCount();
-
-			if (itemsCount == 0) {
-				System.out.println("✘ You don't have any borrowed items to return.");
-				return;
-			}
-
 			do {
-				System.out.println();
-				System.out.println("╭────────────────────────────────────────────╮");
-
-				if (tryAgain) {
-					System.out.println("│ ✘ Incorrect library item number, please    │");
-					System.out.println("│   enter a correct one.                     │");
-					System.out.println("│                                            │");
-					tryAgain = false;
-				}
-
-				System.out.println("│ Currently Borrowed Items:                  │");
-
-				for (int i = 0; i < itemsCount; i++) {
-					LibraryItem item = borrowedItems[i];
-					int avaliableSpaceForVariables = 40;
-
-					String numberString = String.valueOf(i + 1);
-					avaliableSpaceForVariables -= numberString.length();
-
-					String itemTitle = item.getName();
-					String displayedItemTitle = itemTitle.substring(0,
-							Math.min(itemTitle.length(), avaliableSpaceForVariables));
-					avaliableSpaceForVariables -= displayedItemTitle.length();
-
-					System.out.println("│ " + numberString + ". " + displayedItemTitle
-							+ " ".repeat(avaliableSpaceForVariables) + " │");
-				}
-
-				System.out.println("│                                            │");
-				System.out.println("│  Type '-1' to go back.                     │");
-				System.out.println("╰────────────────────────────────────────────╯");
-				System.out.println();
-				System.out.print("» Enter the number of library item you want to return (or '-1'): ");
-
-				int itemNumber = input.nextInt();
-
-				if (itemNumber == -1) {
+				tryAgain = false;
+				
+				LibraryItem[] borrowedItems = user.getBorrowedItems();
+				int itemsCount = user.getItemsCount();
+	
+				if (itemsCount == 0) {
+					System.out.println("✘ You don't have any borrowed items to return.");
 					return;
 				}
-
-				itemIndex = itemNumber - 1;
-
-				if (itemIndex < 0 || itemIndex >= itemsCount) {
+	
+				int itemIndex = selectLibraryItemMenu(input, borrowedItems, itemsCount, "Currently Borrowed Items");
+				
+				if (itemIndex == -1) {
+					return;
+				}
+				
+				LibraryItem selectedItem = borrowedItems[itemIndex];
+				
+				if (!userItemOperationsMenu(input, selectedItem, user, "currently borrowed item")) {
 					tryAgain = true;
 				}
-			} while (tryAgain);
-
-			LibraryItem selectedItem = borrowedItems[itemIndex];
-
-			if (user.returnItem(selectedItem) == 1) {
-				System.out.println("✔ '" + selectedItem.getName() + "' has been returned successfully !");
-			} else {
-				System.out.println(
-						"! Item couldn't be returned due to system issues, please contact library adminstrators.");
-			}
+			} while(tryAgain);
 
 			break;
 		case 4:
@@ -565,5 +411,170 @@ public class Main {
 			System.out.println("✘ Invalid operation, please try again !");
 			break;
 		}
+	}
+
+	private static int selectLibraryItemMenu(Scanner input, LibraryItem[] libraryItems, int libraryItemsCount,
+			String menuTitle) {
+
+		boolean tryAgain = false;
+		int itemIndex;
+
+		do {
+			System.out.println();
+			System.out.println("╭────────────────────────────────────────────╮");
+
+			if (tryAgain) {
+				System.out.println("│ ✘ Incorrect library item number, please    │");
+				System.out.println("│   enter a correct one.                     │");
+				System.out.println("│                                            │");
+				tryAgain = false;
+			}
+
+			System.out.printf("│ %-42s │%n", menuTitle + ":");
+
+			for (int i = 0; i < libraryItemsCount; i++) {
+				LibraryItem item = libraryItems[i];
+				int itemNumber = i + 1;
+
+				System.out.printf("│ %-42s │%n", itemNumber + ". " + item.getName());
+			}
+
+			System.out.println("│                                            │");
+			System.out.println("│  Type '-1' to go to opeartions menu.       │");
+			System.out.println("╰────────────────────────────────────────────╯");
+			System.out.println();
+			System.out.print("» Enter the number of library item you want to open (or '-1'): ");
+
+			int itemNumber = input.nextInt();
+
+			if (itemNumber == -1) {
+				return -1;
+			}
+
+			itemIndex = itemNumber - 1;
+
+			if (itemIndex < 0 || itemIndex >= libraryItemsCount) {
+				tryAgain = true;
+			}
+		} while (tryAgain);
+
+		return itemIndex;
+	}
+
+	/**
+	 * 
+	 * 
+	 * @param input
+	 * @param item
+	 * @param user
+	 * @param listName optional
+	 * @return true if user wants to go to user operations, otherwise false
+	 */
+	private static boolean userItemOperationsMenu(Scanner input, LibraryItem item, User user, String listName) {
+		String errorMessageLine1 = null;
+		String errorMessageLine2 = null;
+
+		User itemUsedBy = item.getUsedBy();
+		boolean userHasItem = itemUsedBy != null && itemUsedBy.getUsername().equals(user.getUsername());
+
+		do {
+			System.out.println();
+			item.display();
+
+			System.out.println("╭────────────────────────────────────────────╮");
+
+			if (errorMessageLine1 != null) {
+				System.out.printf("│ ✘ %-40s │%n", errorMessageLine1);
+				if (errorMessageLine2 != null)
+					System.out.printf("│   %-40s │%n", errorMessageLine2);
+
+				System.out.println("│                                            │");
+
+				errorMessageLine1 = null;
+				errorMessageLine2 = null;
+			}
+
+			System.out.println("│ Library Item Operations:                   │");
+
+			if (userHasItem) {
+				System.out.println("│  1. Return                                 │");
+			} else {
+				System.out.println("│  1. Borrow                                 │");
+			}
+
+			if (listName != null) {
+				System.out.printf("│  2. Back to %-30s │%n", listName);
+				System.out.println("│  3. Back to user operations                │");
+			} else {
+				System.out.println("│  2. Back to user operations                │");
+			}
+
+			System.out.println("╰────────────────────────────────────────────╯");
+			System.out.println();
+			System.out.print("» Enter the operation number: ");
+
+			int itemOperation = input.nextInt();
+
+			switch (itemOperation) {
+			case 1:
+				if (userHasItem) {
+					switch (user.returnItem(item)) {
+					case 1:
+						System.out.println("✔ '" + item.getName() + "' has been returned successfully !");
+						break;
+					case -1:
+						errorMessageLine1 = "You already don't have any";
+						errorMessageLine2 = "borrowed items.";
+						break;
+					case -2:
+						errorMessageLine1 = "Item is already avaliable.";
+						break;
+					case -3:
+						errorMessageLine1 = "Item doesn't belong to the library.";
+						break;
+					default:
+						errorMessageLine1 = "Something went wrong, please report";
+						errorMessageLine2 = "to program developers.";
+						break;
+					}
+				} else {
+					switch (user.borrowItem(item)) {
+					case 1:
+						System.out.println("✔ '" + item.getName() + "' has been borrowed successfully !");
+						break;
+					case -1:
+						errorMessageLine1 = "No more than 5 items can be borrowed";
+						errorMessageLine2 = "at the same time.";
+						break;
+					case -2:
+						errorMessageLine1 = "Manuscripts can't be borrowed.";
+						break;
+					case -3:
+						errorMessageLine1 = "Item is not avaliable right now,";
+						errorMessageLine2 = "please try later.";
+						break;
+					case -4:
+						errorMessageLine1 = "Insufficient balance.";
+						break;
+					default:
+						errorMessageLine1 = "Something went wrong, please report";
+						errorMessageLine2 = "to program developers.";
+						break;
+					}
+				}
+
+				break;
+			case 2:
+				if (listName != null)
+					return false;
+			case 3:
+				break;
+			default:
+				errorMessageLine1 = "Invalid operation. please try again !";
+				break;
+			}
+		} while (errorMessageLine1 != null);
+
+		return true;
 	}
 }
