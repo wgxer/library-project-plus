@@ -768,16 +768,16 @@ public class Main {
 
 			if (userHasItem) {
 				System.out.println("│  1. Return                                 │");
+				System.out.println("│  2. Give a rating                          │");
 			} else {
 				System.out.println("│  1. Borrow                                 │");
 			}
 
-			System.out.println("│  2. Give a rating                          │");
+
+			if (item instanceof Manuscript)
+				System.out.println("│  3. Show Comments                          │");
 
 			if (listName != null) {
-				if (item instanceof Manuscript)
-					System.out.println("│  3. Show Comments                          │");
-
 				System.out.printf("│  4. Back to %-30s │%n", listName);
 			}
 
@@ -838,6 +838,11 @@ public class Main {
 
 				break;
 			case 2:
+				if (!userHasItem) {
+					errorMessageLine1 = "Invalid operation. please try again !";
+					break;
+				}
+				
 				while (true) {
 					System.out.print("» Enter your rating from 1 to 5 (or '-1' to go back): ");
 					int newRating = input.nextInt();
@@ -906,7 +911,12 @@ public class Main {
 
 					System.out.println("╰────────────────────────────────────────────╯");
 					System.out.println();
-					System.out.print("» Enter the number of comment you want to see (or '-1' / '-2'): ");
+					
+					if (isUsedByAuthor) {
+						System.out.print("» Enter the number of comment you want to see (or '-1' / '-2'): ");
+					} else {
+						System.out.print("» Enter the number of comment you want to see (or '-1'): ");
+					}
 
 					int itemNumber = input.nextInt();
 					input.nextLine();
