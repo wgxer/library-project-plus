@@ -451,12 +451,15 @@ public class Main {
 
 			int deleteItemIndex = selectLibraryItemMenu(input, libraryItems, libraryItems.length,
 					"Select an item to delete");
-
+			
 			if (deleteItemIndex == -1) {
 				return;
 			}
+			
+			LibraryItem deleteItem = libraryItems[deleteItemIndex];
+			int actualDeleteItemIndex = library.findIndex(deleteItem, 0);
 
-			switch (library.removeItem(deleteItemIndex)) {
+			switch (library.removeItem(actualDeleteItemIndex)) {
 			case 1:
 				System.out.println("✔ Item has been removed sucessfully from the library !");
 				break;
