@@ -8,6 +8,7 @@ import lpp.account.Author;
 import lpp.account.User;
 import lpp.item.Book;
 import lpp.item.LibraryItem;
+import lpp.item.Manuscript;
 
 public class Main {
 	public static void main(String[] args) {
@@ -16,9 +17,11 @@ public class Main {
 
 		library.addItem(new Book(56, "abcdef", "Unknown", 2016));
 		library.addItem(new Book(105, "Ahmed's ABC book", "Ahmed", 2019));
+		library.addItem(new Manuscript(5, "My Manuscript", "author", 1));
 
 		accountManager.addAccount(new Admin("admin", "admin"));
 		accountManager.addAccount(new User("user", "user123", 10.0));
+		accountManager.addAccount(new Author("author", "author123", 30.0));
 
 		Scanner input = new Scanner(System.in);
 
@@ -180,25 +183,109 @@ public class Main {
 		AccountManager accountManager = AccountManager.getInstance();
 
 		System.out.println();
-		System.out.println("╭────────────────────────────────────────╮");
-		System.out.println("│ Admin Operations:                      │");
-		System.out.println("│  1. Approve Book                       │");
-		System.out.println("│  2. Upgrade a user to author           │");
-		System.out.println("│  3. Statistics                         │");
-		System.out.println("│  4. Logout                             │");
-		System.out.println("╰────────────────────────────────────────╯");
+		System.out.println("╭─────────────────────────────────────────╮");
+		System.out.println("│ Admin Operations:                       │");
+		System.out.println("│  1. Manage manuscript showcase requests │");
+		System.out.println("│  2. Upgrade a user to author            │");
+		System.out.println("│  3. Statistics                          │");
+		System.out.println("│  4. Logout                              │");
+		System.out.println("╰─────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter the number of operation: ");
 
-		int operation = input.nextInt();
+		int adminOperation = input.nextInt();
+		boolean tryAgain = false;
 
-		switch (operation) {
+		switch (adminOperation) {
 		case 1:
-			System.out.println("! Sorry, this service is temporarily unavaliable, please try again later.");
-			return;
-		case 2:
-			boolean tryAgain = false;
+			LibraryItem[] requests = library.getRequests();
+			int requestsCount = library.getRequestsCount();
+			
+			if (requestsCount == 0) {
+				System.out.println("✘ No manuscript showcase requests, please recheck later !");
+				return;
+			}
+			
+			int requestIndex = selectLibraryItemMenu(input, requests, requestsCount,
+					"Manuscripts Showcase Requests");
 
+			if (requestIndex == -1) {
+				return;
+			}
+
+			LibraryItem request = requests[requestIndex];
+
+			do {
+				request.display();
+
+				System.out.println();
+				System.out.println("╭─────────────────────────────────────────╮");
+
+				if (tryAgain) {
+					System.out.println("│ ✘ Invalid operation. please try again ! │");
+					System.out.println("│                                         │");
+
+					tryAgain = false;
+				}
+				System.out.println("│ Request Operations:                     │");
+				System.out.println("│  1. Approve                             │");
+				System.out.println("│  2. Decline                             │");
+				System.out.println("│  3. Go back                             │");
+				System.out.println("╰─────────────────────────────────────────╯");
+				System.out.println();
+				System.out.print("» Enter the number of operation: ");
+
+				int requestOperation = input.nextInt();
+
+				switch (requestOperation) {
+				case 1:
+					switch (library.approveRequest(requestIndex)) {
+					case 1:
+						System.out.println("✔ Request has been approved sucessfully !");
+						break;
+					case -1:
+						System.out.println("✘ No requests to approve !");
+						break;
+					case -2:
+						System.out.println("✘ Invalid request !");
+						break;
+					case -3:
+						System.out.println("✘ Library is full !");
+						break;
+					default:
+						System.out.println("! Something went wrong, please contact program developers.");
+						break;
+					}
+
+					break;
+				case 2:
+
+					switch (library.denyRequest(requestIndex)) {
+					case 1:
+						System.out.println("✔ Request has been declined sucessfully !");
+						break;
+					case -1:
+						System.out.println("✘ No requests to decline !");
+						break;
+					case -2:
+						System.out.println("✘ Invalid request !");
+						break;
+					default:
+						System.out.println("! Something went wrong, please contact program developers.");
+						break;
+					}
+					
+					break;
+				case 3:
+					return;
+				default:
+					tryAgain = true;
+					break;
+				}
+			} while (tryAgain);
+
+			break;
+		case 2:
 			do {
 				System.out.println("╭────────────────────────────────────────────╮");
 
@@ -266,7 +353,13 @@ public class Main {
 
 	private static void showUserMenu(Scanner input, Library library, User user) {
 		AccountManager accountManager = AccountManager.getInstance();
+
 		boolean isAuthor = user instanceof Author;
+		Author author = null;
+
+		if (user instanceof Author) {
+			author = (Author) user;
+		}
 
 		System.out.println();
 		System.out.println("╭────────────────────────────────────────╮");
@@ -277,9 +370,8 @@ public class Main {
 		System.out.println("│  4. Statistics                         │");
 
 		if (isAuthor) {
-			System.out.println("│  5. Review manuscripts                 │");
-			System.out.println("│  6. Book publishing                    │");
-			System.out.println("│  7. Logout                             │");
+			System.out.println("│  5. Request manuscript showcase        │");
+			System.out.println("│  6. Logout                             │");
 		} else {
 			System.out.println("│  5. Logout                             │");
 		}
@@ -289,11 +381,13 @@ public class Main {
 		System.out.print("» Enter the number of operation: ");
 
 		int userOperation = input.nextInt();
+		input.nextLine(); // Used to allow next nextLine calls, this should return immediately
+
 		boolean tryAgain = false;
 
 		switch (userOperation) {
-		case 1:
-		case 2:
+		case 1: // View all library books
+		case 2: // Search for library items
 			LibraryItem[] libraryItems;
 			int libraryItemsCount;
 
@@ -319,7 +413,7 @@ public class Main {
 					System.out.println();
 					System.out.print("» Enter search prompt (or '!back'): ");
 
-					String searchPrompt = input.next();
+					String searchPrompt = input.nextLine();
 
 					if (searchPrompt.equals("!back")) {
 						return;
@@ -359,47 +453,99 @@ public class Main {
 			} while (backToLibraryItems);
 
 			return;
-		case 3:
+		case 3: // View currently borrowed books
 			do {
 				tryAgain = false;
-				
+
 				LibraryItem[] borrowedItems = user.getBorrowedItems();
 				int itemsCount = user.getItemsCount();
-	
+
 				if (itemsCount == 0) {
-					System.out.println("✘ You don't have any borrowed items to return.");
+					System.out.println("✘ You don't have any borrowed items to browse.");
 					return;
 				}
-	
+
 				int itemIndex = selectLibraryItemMenu(input, borrowedItems, itemsCount, "Currently Borrowed Items");
-				
+
 				if (itemIndex == -1) {
 					return;
 				}
-				
+
 				LibraryItem selectedItem = borrowedItems[itemIndex];
-				
+
 				if (!userItemOperationsMenu(input, selectedItem, user, "currently borrowed item")) {
 					tryAgain = true;
 				}
-			} while(tryAgain);
+			} while (tryAgain);
 
 			break;
-		case 4:
+		case 4: // Statistics
 			user.display();
 			break;
-		case 5:
+		case 5: // Request manuscript showcase (for authors) / logout (for users)
 			if (!isAuthor) {
 				System.out.println("- Goodbye, " + user.getUsername() + " !");
 				accountManager.logout();
+
+				break;
+			}
+
+			System.out.println();
+			System.out.println("╭────────────────────────────────────────╮");
+			System.out.println("│ Manuscript Showcase Request:           │");
+			System.out.println("│  Name: [░░░░░░░░░░░░]                  │");
+			System.out.println("│  Pages: [     ]                        │");
+			System.out.println("│                                        │");
+			System.out.println("│ Type '!back' to go back                │");
+			System.out.println("╰────────────────────────────────────────╯");
+			System.out.println();
+			System.out.print("» Enter manuscript's name (or '!back'): ");
+
+			String manuscriptName = input.nextLine();
+
+			if (manuscriptName.equals("!back")) {
+				return;
+			}
+
+			int manuscriptPages;
+
+			do {
+				System.out.println();
+				System.out.println("╭────────────────────────────────────────╮");
+
+				if (tryAgain) {
+					System.out.println("│ ✘ Incorrect number of pages, please    │");
+					System.out.println("│   try again.                           │");
+					System.out.println("│                                        │");
+				}
+
+				System.out.println("│ Manuscript Showcase Request:           │");
+				System.out.printf("│  Name: %-31s │%n", manuscriptName);
+				System.out.println("│  Pages: [░░░░░]                        │");
+				System.out.println("│                                        │");
+				System.out.println("│ Type '-1' to go to operations menu     │");
+				System.out.println("╰────────────────────────────────────────╯");
+				System.out.println();
+				System.out.print("» Enter manuscript's pages (or '-1'): ");
+
+				manuscriptPages = input.nextInt();
+
+				if (manuscriptPages == -1) {
+					return;
+				} else if (manuscriptPages <= 0) {
+					tryAgain = true;
+				}
+			} while (tryAgain);
+
+			if (author.submitManuscript(manuscriptPages, manuscriptName, library)) {
+				System.out.println("✔ Your manuscript showcase request has been sent successfully !");
+			} else {
+				System.out.println("✘ Sorry, the library has currently too many manuscript showcase ");
+				System.out.println("  requests, please try again later !");
 			}
 
 			break;
-		case 6:
-			if (isAuthor) {
-				break;
-			}
-		case 7:
+		case 6: // Logout (author only)
 			if (isAuthor) {
 				System.out.println("- Goodbye, " + user.getUsername() + " !");
 				accountManager.logout();
@@ -546,7 +692,7 @@ public class Main {
 						errorMessageLine2 = "at the same time.";
 						break;
 					case -2:
-						errorMessageLine1 = "Manuscripts can't be borrowed.";
+						errorMessageLine1 = "Manuscripts can't be borrowed by users.";
 						break;
 					case -3:
 						errorMessageLine1 = "Item is not avaliable right now,";
