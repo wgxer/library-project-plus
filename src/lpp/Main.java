@@ -200,6 +200,8 @@ public class Main {
 		System.out.print("» Enter the number of operation: ");
 
 		int adminOperation = input.nextInt();
+		input.nextLine();
+		
 		boolean tryAgain = false;
 
 		switch (adminOperation) {
