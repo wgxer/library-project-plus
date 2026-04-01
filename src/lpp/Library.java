@@ -78,18 +78,18 @@ public class Library {
 		}
 		return searchResult;
 	}
-	/* Method that finds the index of the item in passed parameter, mainly devoloped to use after search
+	/* A recursive method that finds the index of the item in passed parameter, mainly devoloped to use after search
 	 -1 = No items on list
 	 -2 = Item could not be found */
-	public int findIndex(LibraryItem a) {
-		if(itemsCount == 0)
+	public int findIndex(LibraryItem a, int from) {
+		if (itemsCount == 0)
 			return -1;
-		int index = -2;
-		for(int i=0; i<itemsCount; i++) {
-			if(items[i] == a)          // Since this method is mainly used after the search method, the passed parameter will definitely share the same reference with one of the items
-			index = i;	
-		}
-		return index;
+		if (from == itemsCount)
+			return -2;
+		if (items[from] == a)
+			return from;
+		else
+			return findIndex(a, from+1);
 			
 	}
 	// Method that recieves manuscript showcasing requests from authors
@@ -107,6 +107,7 @@ public class Library {
 		if (requestsCount == 0)
 			return -1;
 		if (index<0 || index>=requestsCount)
+			return -2;
 		for (int i=index; i<requestsCount-1; i++) {
 			requests[index] = requests[index+1];
 		}
