@@ -21,7 +21,6 @@ public class Main {
 		accountManager.addAccount(new User("user", "user123", 10.0));
 
 		Scanner input = new Scanner(System.in);
-		new Book(3, "ABC", "Ahmed", 2024).display();
 
 		System.out.println("╭────────────────────────────────────────╮");
 		System.out.println("│                                        │");
