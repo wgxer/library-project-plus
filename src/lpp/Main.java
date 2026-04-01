@@ -201,7 +201,7 @@ public class Main {
 
 		int adminOperation = input.nextInt();
 		input.nextLine();
-		
+
 		boolean tryAgain = false;
 
 		switch (adminOperation) {
@@ -342,7 +342,7 @@ public class Main {
 
 					if (userAccount instanceof User) {
 						((User) userAccount).modifyBalance(balanceToAdd);
-						
+
 						System.out.printf("✔ '%s' balance has been modified by %.2f succesfully !%n", username,
 								balanceToAdd);
 					} else {
@@ -441,21 +441,20 @@ public class Main {
 				System.out.println("✘ No items to remove.");
 				return;
 			}
-			
+
 			LibraryItem[] libraryItems = searchItems(input, library);
-			
+
 			if (libraryItems == null) {
 				return;
 			}
 
-
 			int deleteItemIndex = selectLibraryItemMenu(input, libraryItems, libraryItems.length,
 					"Select an item to delete");
-			
+
 			if (deleteItemIndex == -1) {
 				return;
 			}
-			
+
 			LibraryItem deleteItem = libraryItems[deleteItemIndex];
 			int actualDeleteItemIndex = library.findIndex(deleteItem, 0);
 
@@ -546,7 +545,7 @@ public class Main {
 
 				if (libraryItems == null) {
 					return;
-				
+
 				}
 
 				libraryItemsCount = libraryItems.length;
@@ -776,7 +775,6 @@ public class Main {
 				System.out.println("│  1. Borrow                                 │");
 			}
 
-
 			if (item instanceof Manuscript)
 				System.out.println("│  3. Show Comments                          │");
 
@@ -845,7 +843,7 @@ public class Main {
 					errorMessageLine1 = "Invalid operation. please try again !";
 					break;
 				}
-				
+
 				while (true) {
 					System.out.print("» Enter your rating from 1 to 5 (or '-1' to go back): ");
 					int newRating = input.nextInt();
@@ -914,7 +912,7 @@ public class Main {
 
 					System.out.println("╰────────────────────────────────────────────╯");
 					System.out.println();
-					
+
 					if (isUsedByAuthor) {
 						System.out.print("» Enter the number of comment you want to see (or '-1' / '-2'): ");
 					} else {
@@ -934,7 +932,21 @@ public class Main {
 							break;
 						}
 
-						manuscript.addComment(newComment);
+						switch (manuscript.addComment(newComment)) {
+						case 1:
+							System.out.println("✔ Your comment has been added sucessfully !");
+							break;
+						case -1:
+							System.out.println("✘ Sorry, there are too many comments on this item !");
+							break;
+						case -2:
+							System.out.println("✘ Sorry, your comment exceeds character limit !");
+							break;
+						default:
+							System.out.println("! Something went wrong, please contact library adminstrators.");
+							break;
+						}
+
 						continue;
 					}
 
@@ -970,11 +982,11 @@ public class Main {
 
 		return true;
 	}
-	
+
 	private static LibraryItem[] searchItems(Scanner input, Library library) {
 		boolean tryAgain = false;
 		LibraryItem[] libraryItems = null;
-		
+
 		do {
 			System.out.println("╭────────────────────────────────────────╮");
 
@@ -1005,7 +1017,7 @@ public class Main {
 				tryAgain = true;
 			}
 		} while (tryAgain);
-		
+
 		return libraryItems;
 	}
 }
