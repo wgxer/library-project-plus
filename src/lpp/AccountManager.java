@@ -74,6 +74,19 @@ public class AccountManager {
 		return true;
 	}
 	
+	public boolean deleteAccount(String username) {
+		int accountIndex = findAccountIndex(username);
+		
+		if (accountIndex == -1) {
+			return false;
+		}
+		
+		accounts[accountIndex] = accounts[--accountsCount];
+		accounts[accountsCount] = null;
+		
+		return true;
+	}
+	
 	public boolean login(String username, String password) {
 		Account account = findAccount(username);
 		
