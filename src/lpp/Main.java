@@ -650,16 +650,17 @@ public class Main {
 			} else {
 				System.out.println("│  1. Borrow                                 │");
 			}
+			
+			System.out.println("│  2. Give a rating                          │");
 
 			if (listName != null) {
 				if (item instanceof Manuscript)
-					System.out.println("│  2. Show Comments                          │");
-				System.out.printf("│  3. Back to %-30s │%n", listName);
-				System.out.println("│  4. Back to user operations                │");
-			} else {
-				System.out.println("│  4. Back to user operations                │");
-			}
+					System.out.println("│  3. Show Comments                          │");
 
+				System.out.printf("│  4. Back to %-30s │%n", listName);
+			}
+			
+			System.out.println("│  5. Back to user operations                │");
 			System.out.println("╰────────────────────────────────────────────╯");
 			System.out.println();
 			System.out.print("» Enter the operation number: ");
@@ -716,17 +717,36 @@ public class Main {
 
 				break;
 			case 2:
+				while (true) {
+					System.out.print("» Enter your rating from 1 to 5 (or '-1' to go back): ");
+					int newRating = input.nextInt();
+					
+					if (newRating == -1) {
+						break;
+					}
+					
+					
+					if (item.reviewItem(newRating)) {
+						System.out.println("» This item has been rated at " + newRating + "/5 successfully !");
+						break;
+					}
+					
+					System.out.println("✘ Incorrect rating, please try again !");
+				}
+				
+				break;
+			case 3:
 				if (!(item instanceof Manuscript)) {
 					errorMessageLine1 = "Invalid operation. please try again !";
 					break;
 				}
 
 				boolean isAuthor = user instanceof Author;
-				boolean isUsedByAuthor = isAuthor && item.getUsedBy() != null && item.getUsedBy().getUsername().equals(user.getUsername());
+				boolean isUsedByAuthor = isAuthor && item.getUsedBy() != null
+						&& item.getUsedBy().getUsername().equals(user.getUsername());
 
 				boolean tryAgain = false;
 				Manuscript manuscript = (Manuscript) item;
-
 
 				int commentIndex;
 
@@ -745,7 +765,7 @@ public class Main {
 					}
 
 					System.out.printf("│ %-42s │%n", "Comments:");
-					
+
 					if (commentsCount == 0) {
 						System.out.println("│  No comments so far...                     │");
 					}
@@ -770,17 +790,17 @@ public class Main {
 
 					int itemNumber = input.nextInt();
 					input.nextLine();
-					
+
 					if (isUsedByAuthor && itemNumber == -2) {
 						System.out.print("» Enter your new comment (or '!back'): ");
-						
+
 						String newComment = input.nextLine();
-						
+
 						if (newComment.equals("!back")) {
 							askForOperations = true;
 							break;
 						}
-						
+
 						manuscript.addComment(newComment);
 						continue;
 					}
@@ -791,7 +811,7 @@ public class Main {
 					}
 
 					commentIndex = itemNumber - 1;
-					
+
 					if (commentIndex < 0 || commentIndex >= commentsCount) {
 						tryAgain = true;
 					} else {
@@ -804,10 +824,10 @@ public class Main {
 				}
 
 				break;
-			case 3:
+			case 4:
 				if (listName != null)
 					return false;
-			case 4:
+			case 5:
 				break;
 			default:
 				errorMessageLine1 = "Invalid operation. please try again !";
