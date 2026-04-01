@@ -187,7 +187,7 @@ public class Main {
 		System.out.println("╭─────────────────────────────────────────╮");
 		System.out.println("│ Admin Operations:                       │");
 		System.out.println("│  1. Manage manuscript showcase requests │");
-		System.out.println("│  2. Add balance to user account         │");
+		System.out.println("│  2. Add/remove balance to user          │");
 		System.out.println("│  3. Upgrade a user to author            │");
 		System.out.println("│  4. View user statistics                │");
 		System.out.println("│  5. Change user password                │");
@@ -307,7 +307,7 @@ public class Main {
 				}
 
 				if (adminOperation == 2) {
-					System.out.println("│ Add Balance:                               │");
+					System.out.println("│ Add/Remove Balance:                        │");
 				} else if (adminOperation == 3) {
 					System.out.println("│ Upgrade User to Author:                    │");
 				} else if (adminOperation == 4) {
@@ -341,8 +341,9 @@ public class Main {
 					Account userAccount = accountManager.findAccount(username);
 
 					if (userAccount instanceof User) {
-						((User) userAccount).addToBalance(balanceToAdd);
-						System.out.printf("✔ '%s' balance has been increased by %.2f succesfully !%n", username,
+						((User) userAccount).modifyBalance(balanceToAdd);
+						
+						System.out.printf("✔ '%s' balance has been modified by %.2f succesfully !%n", username,
 								balanceToAdd);
 					} else {
 						System.out.println("✘ Account '" + username + "' is not a user !");
