@@ -192,8 +192,9 @@ public class Main {
 		System.out.println("│  4. View user statistics                │");
 		System.out.println("│  5. Change user password                │");
 		System.out.println("│  6. Add book                            │");
-		System.out.println("│  7. Statistics                          │");
-		System.out.println("│  8. Logout                              │");
+		System.out.println("│  7. Delete a library item               │");
+		System.out.println("│  8. Statistics                          │");
+		System.out.println("│  9. Logout                              │");
 		System.out.println("╰─────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter the number of operation: ");
@@ -339,7 +340,8 @@ public class Main {
 
 					if (userAccount instanceof User) {
 						((User) userAccount).addToBalance(balanceToAdd);
-						System.out.printf("✔ '%s' balance has been increased by %.2f succesfully !%n", username, balanceToAdd);
+						System.out.printf("✔ '%s' balance has been increased by %.2f succesfully !%n", username,
+								balanceToAdd);
 					} else {
 						System.out.println("✘ Account '" + username + "' is not a user !");
 					}
@@ -363,7 +365,7 @@ public class Main {
 						System.out.println("! Something went wrong, please report to program authors !");
 						break;
 					}
-				} else if(adminOperation == 4) {
+				} else if (adminOperation == 4) {
 					Account userAccount = accountManager.findAccount(username);
 
 					if (userAccount instanceof User) {
@@ -396,40 +398,81 @@ public class Main {
 			if (newBookName.equals("!cancel")) {
 				break;
 			}
-			
+
 			System.out.print("» Enter new book author name (or '!cancel' to cancel): ");
 			String newBookAuthorName = input.nextLine();
 
 			if (newBookAuthorName.equals("!cancel")) {
 				break;
 			}
-			
+
 			System.out.print("» Enter new book pages (or '-1' to cancel): ");
 			int newBookPages = input.nextInt();
-			
+
 			if (newBookPages == -1) {
 				break;
 			} else if (newBookPages <= 0) {
 				System.out.println("✘ Invalid pages.");
 				break;
 			}
-			
+
 			System.out.print("» Enter new book publication year (or '-1' to cancel): ");
 			int newBookPublicationYear = input.nextInt();
-			
+
 			if (newBookPublicationYear == -1) {
 				break;
 			} else if (newBookPublicationYear < 0) {
 				System.out.println("✘ Invalid publication year.");
 				break;
 			}
-			
+
 			if (library.addItem(new Book(newBookPages, newBookName, newBookAuthorName, newBookPublicationYear))) {
+				System.out.println("✔ Book has been added sucessfully to the library !");
+			} else {
 				System.out.println("✘ Library is full.");
 			}
-			
+
 			break;
 		case 7:
+			if (library.getItemsCount() == 0) {
+				System.out.println("✘ No items to remove.");
+				return;
+			}
+			
+			LibraryItem[] libraryItems = searchItems(input, library);
+			
+			if (libraryItems == null) {
+				return;
+			}
+
+
+			int deleteItemIndex = selectLibraryItemMenu(input, libraryItems, libraryItems.length,
+					"Select an item to delete");
+
+			if (deleteItemIndex == -1) {
+				return;
+			}
+
+			switch (library.removeItem(deleteItemIndex)) {
+			case 1:
+				System.out.println("✔ Item has been removed sucessfully from the library !");
+				break;
+			case -1:
+				System.out.println("✘ No items to remove.");
+				break;
+			case -2:
+				System.out.println("✘ Invalid input.");
+				break;
+			case -3:
+				System.out.println("✘ This item is currently borrowed, please try again later.");
+				break;
+			default:
+				System.out.println("! Something went wrong, please contact program developers.");
+				break;
+			}
+
+			break;
+		case 8:
 			System.out.println("╭────────────────────────────────────────╮");
 			System.out.println("│ Statistics:                            │");
 			System.out.printf("│  Total Borrows: %-22d │%n", Admin.getTotalBorrows());
@@ -438,7 +481,7 @@ public class Main {
 			System.out.println("╰────────────────────────────────────────╯");
 
 			break;
-		case 8:
+		case 9:
 			System.out.println("- Goodbye, " + admin.getUsername() + " !");
 			accountManager.logout();
 
@@ -493,37 +536,14 @@ public class Main {
 				libraryItems = library.getItems();
 				libraryItemsCount = library.getItemsCount();
 			} else {
-				do {
-					System.out.println("╭────────────────────────────────────────╮");
+				libraryItems = searchItems(input, library);
 
-					if (tryAgain) {
-						System.out.println("│ ✘ No library items matching search     │");
-						System.out.println("│   prompt were found                    │");
-						System.out.println("│                                        │");
-						tryAgain = false;
-					}
+				if (libraryItems == null) {
+					return;
+				
+				}
 
-					System.out.println("│ Search by title:                       │");
-					System.out.println("│  [░░░░░░░░░░░░░░░░░░░░░░░░░]           │");
-					System.out.println("│                                        │");
-					System.out.println("│  Type '!back' to go back.              │");
-					System.out.println("╰────────────────────────────────────────╯");
-					System.out.println();
-					System.out.print("» Enter search prompt (or '!back'): ");
-
-					String searchPrompt = input.nextLine();
-
-					if (searchPrompt.equals("!back")) {
-						return;
-					}
-
-					libraryItems = library.searchItem(searchPrompt);
-					libraryItemsCount = libraryItems.length;
-
-					if (libraryItemsCount == 0) {
-						tryAgain = true;
-					}
-				} while (tryAgain);
+				libraryItemsCount = libraryItems.length;
 			}
 
 			boolean backToLibraryItems;
@@ -933,5 +953,43 @@ public class Main {
 		} while (errorMessageLine1 != null || askForOperations);
 
 		return true;
+	}
+	
+	private static LibraryItem[] searchItems(Scanner input, Library library) {
+		boolean tryAgain = false;
+		LibraryItem[] libraryItems = null;
+		
+		do {
+			System.out.println("╭────────────────────────────────────────╮");
+
+			if (tryAgain) {
+				System.out.println("│ ✘ No library items matching search     │");
+				System.out.println("│   prompt were found                    │");
+				System.out.println("│                                        │");
+				tryAgain = false;
+			}
+
+			System.out.println("│ Search by title:                       │");
+			System.out.println("│  [░░░░░░░░░░░░░░░░░░░░░░░░░]           │");
+			System.out.println("│                                        │");
+			System.out.println("│  Type '!back' to go back.              │");
+			System.out.println("╰────────────────────────────────────────╯");
+			System.out.println();
+			System.out.print("» Enter search prompt (or '!back'): ");
+
+			String searchPrompt = input.nextLine();
+
+			if (searchPrompt.equals("!back")) {
+				return null;
+			}
+
+			libraryItems = library.searchItem(searchPrompt);
+
+			if (libraryItems.length == 0) {
+				tryAgain = true;
+			}
+		} while (tryAgain);
+		
+		return libraryItems;
 	}
 }
