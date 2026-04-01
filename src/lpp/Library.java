@@ -130,6 +130,7 @@ public class Library {
 		Author author = ((Author)AccountManager.getInstance().findAccount(authorName));
 		items[itemsCount++] = requests[index].copyItem();
 		author.showcaseManuscript();
+		author.modifyBalance(requests[index].calculatePrice()/10);
 		denyRequest(index);
 		return 1;
 	}

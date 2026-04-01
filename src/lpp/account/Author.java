@@ -25,7 +25,6 @@ public class Author extends User {
 			return false;
 		LibraryItem manuscript = new Manuscript(pages, name, this.getUsername(), 1);
 		library.addRequest(manuscript);
-		this.balance += manuscript.calculatePrice()/10;
 		return true;
      
 	}
@@ -41,19 +40,19 @@ public class Author extends User {
 		if(!i.isAvailable())
 			return -3;
 		double price = i.calculatePrice();
-		
+		if(!(i.getAuthorName() == this.getUsername())) {
 		if(balance < price)
 			return -4;
-		
+		}
 		borrowedItems[itemsCount] = i;
 		itemsCount++;
 		borrows++;
-		
+		if(!(i.getAuthorName() == this.getUsername())) {
 		balance -= price;
 		fees += price;
-		
-		Admin.recordBorrow();
 		Admin.recordRevenue(price);
+	}
+		Admin.recordBorrow();
 		
 		i.useItem(this);
 		return 1;
