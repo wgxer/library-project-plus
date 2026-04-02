@@ -109,7 +109,7 @@ public class Library {
 		if (index<0 || index>=requestsCount)
 			return -2;
 		for (int i=index; i<requestsCount-1; i++) {
-			requests[index] = requests[index+1];
+			requests[i] = requests[i+1];
 		}
 		requests[--requestsCount] = null;
 		return 1;
