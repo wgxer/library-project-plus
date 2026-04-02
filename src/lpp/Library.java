@@ -109,7 +109,7 @@ public class Library {
 		if (index<0 || index>=requestsCount)
 			return -2;
 		for (int i=index; i<requestsCount-1; i++) {
-			requests[index] = requests[index+1];
+			requests[i] = requests[i+1];
 		}
 		requests[--requestsCount] = null;
 		return 1;
@@ -130,6 +130,7 @@ public class Library {
 		Author author = ((Author)AccountManager.getInstance().findAccount(authorName));
 		items[itemsCount++] = requests[index].copyItem();
 		author.showcaseManuscript();
+		author.modifyBalance(requests[index].calculatePrice()/10);
 		denyRequest(index);
 		return 1;
 	}

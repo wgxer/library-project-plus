@@ -35,7 +35,7 @@ public class Manuscript extends LibraryItem {
 	public int addComment(String comment) {
 		if (commentsCount == 100)
 			return -1;
-		if (comment.length() == 100)
+		if (comment.length() > 120)
 			return -2;
 		comments[commentsCount]= new Comment(usedBy.getUsername(), comment);
 		commentsCount++;
@@ -90,7 +90,7 @@ public class Manuscript extends LibraryItem {
 		return commentsCount;
 	}
 	public double calculatePrice() {
-		double price = pages/15+age*5;
+		double price = ((double)pages)/15+age*5;
 		return price; 
 	}
 

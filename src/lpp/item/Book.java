@@ -36,7 +36,7 @@ public class Book extends LibraryItem {
 	
 	public double calculatePrice() {
 		
-		return (getPages() / 15) ;
+		return ((double)pages)/ 15 ;
 	}
 
 
