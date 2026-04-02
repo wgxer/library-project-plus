@@ -36,7 +36,11 @@ public class Main {
 			Account account = AccountManager.getInstance().getCurrentAccount();
 
 			if (account == null) {
-				showLoginMenu(input);
+				boolean exit = showLoginMenu(input);
+				
+				if (exit) {
+					break;
+				}
 			} else if (account instanceof Admin) {
 				showAdminMenu(input, library, (Admin) account);
 			} else if (account instanceof User) {
@@ -45,7 +49,7 @@ public class Main {
 		}
 	}
 
-	private static void showLoginMenu(Scanner input) {
+	private static boolean showLoginMenu(Scanner input) {
 		AccountManager accountManager = AccountManager.getInstance();
 
 		System.out.println();
@@ -55,6 +59,7 @@ public class Main {
 		System.out.println("│  Password: [            ]              │");
 		System.out.println("│                                        │");
 		System.out.println("│ Don't have an account? Type '!signup'  │");
+		System.out.println("│ Type '!exit' to exit from program      │");
 		System.out.println("╰────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter username (or '!signup'): ");
@@ -63,7 +68,9 @@ public class Main {
 
 		if (loginUsername.equals("!signup")) {
 			showSignupMenu(input);
-			return;
+			return false;
+		} else if (loginUsername.equals("!exit")) {
+			return true;
 		}
 
 		System.out.println();
@@ -81,10 +88,11 @@ public class Main {
 			System.out.println("✘ Incorrect username/password, please try again !");
 			System.out.println();
 
-			return;
+			return false;
 		}
 
 		System.out.println("✔ Welcome " + accountManager.getCurrentAccount().getUsername() + " to library !");
+		return false;
 	}
 
 	private static void showSignupMenu(Scanner input) {
