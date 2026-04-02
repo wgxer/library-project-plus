@@ -1,7 +1,6 @@
 package lpp;
 
 import lpp.item.LibraryItem;
-import lpp.AccountManager;
 import lpp.account.Author;
 
 public class Library {

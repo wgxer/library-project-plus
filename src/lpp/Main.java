@@ -7,8 +7,6 @@ import lpp.account.Admin;
 import lpp.account.Author;
 import lpp.account.User;
 import lpp.item.Book;
-import lpp.item.Comment;
-import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
 
 public class Main {
