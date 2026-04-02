@@ -164,10 +164,11 @@ public class Menu {
 		System.out.println("│  3. Upgrade a user to author            │");
 		System.out.println("│  4. View user statistics                │");
 		System.out.println("│  5. Change user password                │");
-		System.out.println("│  6. Add book                            │");
-		System.out.println("│  7. Delete a library item               │");
-		System.out.println("│  8. Statistics                          │");
-		System.out.println("│  9. Logout                              │");
+		System.out.println("│  6. Delete user                         │");
+		System.out.println("│  7. Add book                            │");
+		System.out.println("│  8. Delete a library item               │");
+		System.out.println("│  9. Statistics                          │");
+		System.out.println("│  10. Logout                             │");
 		System.out.println("╰─────────────────────────────────────────╯");
 		System.out.println();
 		System.out.print("» Enter the number of operation: ");
@@ -269,6 +270,7 @@ public class Menu {
 		case 3:
 		case 4:
 		case 5:
+		case 6:
 			do {
 				System.out.println("╭────────────────────────────────────────────╮");
 
@@ -287,6 +289,8 @@ public class Menu {
 					System.out.println("│ View User Statistics:                      │");
 				} else if (adminOperation == 5) {
 					System.out.println("│ Change User Password:                      │");
+				} else {
+					System.out.println("│ Delete User:                               │");
 				}
 
 				System.out.println("│  Username: [░░░░░░░░░░░░]                  │");
@@ -351,7 +355,7 @@ public class Menu {
 					}
 
 					break;
-				} else {
+				} else if (adminOperation == 5) {
 					System.out.print("» Enter new password ('!cancel' to cancel): ");
 					String newPassword = input.next();
 
@@ -363,11 +367,25 @@ public class Menu {
 					System.out.println("✔ '" + username + "' password has been updated sucessfully !");
 
 					break;
+				} else {
+					Account accountToDelete = accountManager.findAccount(username);
+					
+					if (accountToDelete == null) {
+						System.out.println("✘ Account '" + username + "' doesn't exist !");
+					} else if (accountToDelete instanceof User) {
+						if (accountManager.deleteAccount(username)) {
+							System.out.println("✔ '" + username + "' account has been deleted sucessfully !");
+						} else {
+							System.out.println("✘ Account '" + username + "' is not a user !");
+						}
+					} else {
+						System.out.println("✘ Account '" + username + "' is not a user !");
+					}
 				}
 			} while (tryAgain);
 
 			break;
-		case 6:
+		case 7:
 			System.out.print("» Enter new book name (or '!cancel' to cancel): ");
 			String newBookName = input.nextLine();
 
@@ -409,7 +427,7 @@ public class Menu {
 			}
 
 			break;
-		case 7:
+		case 8:
 			if (library.getItemsCount() == 0) {
 				System.out.println("✘ No items to remove.");
 				return;
@@ -450,7 +468,7 @@ public class Menu {
 			}
 
 			break;
-		case 8:
+		case 9:
 			System.out.println("╭────────────────────────────────────────╮");
 			System.out.println("│ Statistics:                            │");
 			System.out.printf("│  Total Borrows: %-22d │%n", Admin.getTotalBorrows());
@@ -459,7 +477,7 @@ public class Menu {
 			System.out.println("╰────────────────────────────────────────╯");
 
 			break;
-		case 9:
+		case 10:
 			System.out.println("- Goodbye, " + admin.getUsername() + " !");
 			accountManager.logout();
 
