@@ -29,8 +29,12 @@ public class User extends Account implements Displayable{
 		super(other);
 		this.balance = other.balance;
 		
-		this.borrowedItems = other.borrowedItems;
+		this.borrowedItems = new LibraryItem[5];
 		this.itemsCount = other.itemsCount;
+		
+		for (int i = 0; i < other.itemsCount; i++) {
+			this.borrowedItems[i] = other.borrowedItems[i];
+		}
 		
 		this.borrows = other.borrows;
 		this.returns = other.returns;
