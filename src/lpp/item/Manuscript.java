@@ -90,7 +90,7 @@ public class Manuscript extends LibraryItem {
 		return commentsCount;
 	}
 	public double calculatePrice() {
-		double price = ((double)pages)/15+age*5;
+		double price = ((double)pages)/15+age*2;
 		return price; 
 	}
 

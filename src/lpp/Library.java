@@ -135,7 +135,7 @@ public class Library {
 	}
 	
 	public boolean displayRequestsList() {
-		if (requestsCount == 10)
+		if (requestsCount == 0)
 			return false;
 		for(int i=0; i<requestsCount; i++) {
 			System.out.println(i+"- Showcase request by: "+requests[i].getAuthorName());
