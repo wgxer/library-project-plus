@@ -125,7 +125,7 @@ public class User extends Account implements Displayable{
 			
 	}
 	
-	public void modifyBalance(Double value) {
+	public void modifyBalance(double value) {
 		if (balance + value < 0)
 			balance = 0;
 		else
