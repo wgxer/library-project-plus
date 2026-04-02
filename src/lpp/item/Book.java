@@ -4,8 +4,8 @@ public class Book extends LibraryItem {
 	
 	private int publcationYear;
 
-	public Book(int pages,String name,String aoutherName, int publcationYear) {
-		super(pages,name,aoutherName);
+	public Book(int pages,String name,String authorName, int publcationYear) {
+		super(pages,name,authorName);
 		this.publcationYear = publcationYear;
 	}
 	
