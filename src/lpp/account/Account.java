@@ -4,11 +4,6 @@ public class Account {
 	private String username;
 	private String password;
 	
-	// TODO: Remove this after all subclasses are implemented
-	public Account() {
-		this("", "");
-	}
-	
 	public Account(String username, String password) {
 		this.username = username;
 		this.password = password;
