@@ -4,6 +4,8 @@ import lpp.Displayable;
 import lpp.account.User;
 
 public abstract class LibraryItem implements Displayable{
+	protected static int itemsCount;
+	protected int ID;
 	protected double reviews;
 	protected int reviewsCount;
 	protected String authorName;
@@ -22,6 +24,7 @@ public abstract class LibraryItem implements Displayable{
 		reviews=0;
 		reviewsCount=0;
 		timesUsed=0;
+		ID = itemsCount++;
 	}
 	
 	public LibraryItem(LibraryItem i) {
@@ -33,6 +36,7 @@ public abstract class LibraryItem implements Displayable{
 		this.reviews= i.reviews;
 		this.reviewsCount= i.reviewsCount;
 		this.timesUsed= i.timesUsed;
+		this.ID = i.ID;
 	}
 	
 	public abstract LibraryItem copyItem();

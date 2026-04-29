@@ -3,6 +3,7 @@ package lpp.account;
 import lpp.Library;
 import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
+import lpp.item.UnavailableItemException;
 
 public class Author extends User {
 	
@@ -34,15 +35,15 @@ public class Author extends User {
 	 -3 = Item is not available
 	 -4 = Insufficient balance */
 	@Override
-	public int borrowItem(LibraryItem i) {
+	public void borrowItem(LibraryItem i) throws Exception  {
 		if (itemsCount == 5)
-			return -1;;
+			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(!i.isAvailable())
-			return -3;
+			throw new UnavailableItemException("Item is not available at the moment!");
 		double price = i.calculatePrice();
 		if(!(i.getAuthorName() == this.getUsername())) {
 		if(balance < price)
-			return -4;
+			throw new InsufficientBalanceException("You do not have enough balance!");
 		}
 		borrowedItems[itemsCount] = i;
 		itemsCount++;
@@ -55,7 +56,6 @@ public class Author extends User {
 		Admin.recordBorrow();
 		
 		i.useItem(this);
-		return 1;
 	}
 	@Override
 	public void display() {
