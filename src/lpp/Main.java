@@ -8,7 +8,8 @@ import lpp.account.Account;
 import lpp.account.Admin;
 import lpp.account.Author;
 import lpp.account.User;
-import lpp.gui.AccountFrame;
+import lpp.gui.frame.AccountFrame;
+import lpp.gui.frame.UserFrame;
 import lpp.item.Book;
 import lpp.item.Manuscript;
 
@@ -20,13 +21,22 @@ public class Main {
 		library.addItem(new Book(56, "abcdef", "Unknown", 2016));
 		library.addItem(new Book(105, "Ahmed's ABC book", "Ahmed", 2019));
 		library.addItem(new Manuscript(5, "My Manuscript", "author", 1));
+		
+		User user = new User("user", "user123", 100.0);
+		user.borrowItem(library.getItems()[0]);
+		user.borrowItem(library.getItems()[1]);
 
 		accountManager.addAccount(new Admin("admin", "admin"));
-		accountManager.addAccount(new User("user", "user123", 10.0));
+		accountManager.addAccount(user);
 		accountManager.addAccount(new Author("author", "author123", 30.0));
 
 		JFrame frame = new AccountFrame();
 		frame.setVisible(true);
+		
+//		accountManager.login("user", "user123");
+//		
+//		JFrame frame = new UserFrame((User) accountManager.getCurrentAccount());
+//		frame.setVisible(true);
 
 		if (1 == 1) return;
 		

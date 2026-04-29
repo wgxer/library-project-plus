@@ -1,5 +1,6 @@
 package lpp.gui;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 
@@ -8,6 +9,8 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 
 public class ViewFactory {
 	private boolean vertical;
@@ -24,6 +27,7 @@ public class ViewFactory {
 	private float alignmentX;
 	private float alignmentY;
 	
+	private int roundedBorderThickness;
 	private boolean visible;
 	
 	private ViewFactory(boolean vertical) {
@@ -41,6 +45,7 @@ public class ViewFactory {
 		this.alignmentX = Component.LEFT_ALIGNMENT;
 		this.alignmentY = Component.TOP_ALIGNMENT;
 		
+		this.roundedBorderThickness = 0;
 		this.visible = true;
 	}
 	
@@ -64,6 +69,11 @@ public class ViewFactory {
 	
 	public ViewFactory fillHeight() {
 		this.fillHeight = true;
+		return this;
+	}
+	
+	public ViewFactory roundedBorder(int thickness) {
+		this.roundedBorderThickness = thickness;
 		return this;
 	}
 	
@@ -127,10 +137,16 @@ public class ViewFactory {
 			panel.setBorder(BorderFactory.createEmptyBorder(paddingTop, paddingLeft, paddingBottom, paddingRight));
 		}
 		
-		if (fillWidth || fillHeight) {
-			Dimension preferredSize = panel.getPreferredSize();
-			panel.setPreferredSize(new Dimension(fillWidth ? Integer.MAX_VALUE : preferredSize.width, fillHeight ? Integer.MAX_VALUE : preferredSize.height));
-			panel.setMaximumSize(new Dimension(fillWidth ? Integer.MAX_VALUE : preferredSize.width, fillHeight ? Integer.MAX_VALUE : preferredSize.height));
+		if (roundedBorderThickness > 0) {
+			panel.setBorder(BorderFactory.createCompoundBorder(new LineBorder(Color.black, roundedBorderThickness, true), panel.getBorder()));
+		}
+		
+		if (fillWidth) {
+			panel.add(Box.createHorizontalGlue());
+		}
+		
+		if (fillHeight) {
+			panel.add(Box.createVerticalGlue());
 		}
 		
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);

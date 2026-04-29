@@ -1,4 +1,4 @@
-package lpp.gui;
+package lpp.gui.frame;
 
 import java.awt.Component;
 import java.awt.Container;
@@ -15,6 +15,8 @@ import javax.swing.WindowConstants;
 
 import lpp.AccountManager;
 import lpp.account.User;
+import lpp.gui.GUIUtils;
+import lpp.gui.ViewFactory;
 
 public class AccountFrame extends JFrame implements ActionListener {
 	private JLabel topLabel;
@@ -88,7 +90,14 @@ public class AccountFrame extends JFrame implements ActionListener {
 			if (!signupMode) {				
 				if (buttonText.equals("Login")) {	
 					if (accountManager.login(username, password)) {
-						JOptionPane.showMessageDialog(contentPane, "Login was succesfully");
+						if (accountManager.getCurrentAccount() instanceof User) {
+							setVisible(false);
+							
+							UserFrame userFrame = new UserFrame((User) accountManager.getCurrentAccount());
+							userFrame.setVisible(true);
+						} else {
+							JOptionPane.showMessageDialog(contentPane, "Login was succesful !");
+						}
 					} else {
 						JOptionPane.showMessageDialog(contentPane, "Incorrect username/password, please try again !", "Login failed !", JOptionPane.ERROR_MESSAGE);
 					}
@@ -143,7 +152,11 @@ public class AccountFrame extends JFrame implements ActionListener {
 					
 					switch(accountManager.addAccount(new User(username, password, 0.0))) {
 					case 0:
-						JOptionPane.showMessageDialog(contentPane, "Signup was succesful !");
+						setVisible(false);
+						
+						UserFrame userFrame = new UserFrame((User) accountManager.getCurrentAccount());
+						userFrame.setVisible(true);
+
 						break;
 					case -1:
 						JOptionPane.showMessageDialog(
