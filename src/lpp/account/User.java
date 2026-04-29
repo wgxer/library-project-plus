@@ -149,5 +149,11 @@ public class User extends Account implements Displayable{
 		return itemsCount;
 	}
 	
+	public int getBorrows() {
+		return borrows;
+	}
 	
+	public int getReturns() {
+		return returns;
+	}
 }
