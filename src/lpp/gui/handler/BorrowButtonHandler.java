@@ -10,13 +10,13 @@ import lpp.account.User;
 import lpp.gui.IUpdateable;
 import lpp.item.LibraryItem;
 
-public class ReturnButtonHandler implements ActionListener {
+public class BorrowButtonHandler implements ActionListener {
 	private User user;
 	private LibraryItem libraryItem;
 	private Container contentPane;
 	private IUpdateable updateable;
 	
-	public ReturnButtonHandler(User user, LibraryItem libraryItem, Container contentPane, IUpdateable updateable) {
+	public BorrowButtonHandler(User user, LibraryItem libraryItem, Container contentPane, IUpdateable updateable) {
 		this.user = user;
 		this.libraryItem = libraryItem;
 		this.contentPane = contentPane;
@@ -24,7 +24,7 @@ public class ReturnButtonHandler implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		switch(user.returnItem(libraryItem)) {
+		switch(user.borrowItem(libraryItem)) {
 		case 1:
 			if (updateable != null) {
 				updateable.update();
@@ -34,8 +34,8 @@ public class ReturnButtonHandler implements ActionListener {
 		case -1:
 			JOptionPane.showMessageDialog(
 				contentPane, 
-				"You don't have any borrowed books.", 
-				"Return failed !", 
+				"No more than 5 items can be borrowed at the same time.", 
+				"Borrow failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
 			
@@ -43,8 +43,8 @@ public class ReturnButtonHandler implements ActionListener {
 		case -2:
 			JOptionPane.showMessageDialog(
 				contentPane, 
-				"This library item is not borrowed.", 
-				"Return failed !", 
+				"Manuscripts can't be borrowed by users.", 
+				"Borrow failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
 			
@@ -52,13 +52,23 @@ public class ReturnButtonHandler implements ActionListener {
 		case -3:
 			JOptionPane.showMessageDialog(
 				contentPane, 
-				"This library item couldn't be found in the library.", 
-				"Return failed !", 
+				"Item is not avaliable right now, please try later.", 
+				"Borrow failed !", 
+				JOptionPane.ERROR_MESSAGE
+			);
+			
+			break;
+		case -4:
+			JOptionPane.showMessageDialog(
+				contentPane, 
+				"Insufficient balance.", 
+				"Borrow failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
 			
 			break;
 		default:
+			break;
 		}
 	}
 }

@@ -9,7 +9,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 import javax.swing.border.LineBorder;
 
 public class ViewFactory {
@@ -110,20 +109,28 @@ public class ViewFactory {
 		return this;
 	}
 	
-	public JPanel build(JComponent ...components) {
+	public JPanel build(Component ...components) {
 		JPanel panel = new JPanel();
 		
 		for (int i = 0; i < components.length; i++) {
-			JComponent component = components[i];
+			Component component = components[i];
+			if (component == null) continue;
 
-			component.setAlignmentX(alignmentX);
-			component.setAlignmentY(alignmentY);
+			if (component instanceof JComponent) {
+				JComponent jComponent = (JComponent) component;
+				
+				jComponent.setAlignmentX(alignmentX);
+				jComponent.setAlignmentY(alignmentY);
+			}
 			
 			panel.add(component);
 			
 			if (gap != 0) {
 				if (vertical) {
-					panel.add(Box.createVerticalStrut(gap));
+					Component gapBox = Box.createVerticalStrut(gap);
+					gapBox.setMaximumSize(new Dimension(1, gapBox.getMaximumSize().height));
+
+					panel.add(gapBox);
 				} else {
 					Component gapBox = Box.createHorizontalStrut(gap);
 					gapBox.setMaximumSize(new Dimension(gapBox.getMaximumSize().width, 1));

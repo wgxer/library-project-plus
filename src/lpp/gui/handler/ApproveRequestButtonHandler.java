@@ -6,25 +6,25 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import lpp.account.User;
+import lpp.Library;
 import lpp.gui.IUpdateable;
-import lpp.item.LibraryItem;
 
-public class ReturnButtonHandler implements ActionListener {
-	private User user;
-	private LibraryItem libraryItem;
+public class ApproveRequestButtonHandler implements ActionListener {
+	private Library library;
+	private int requestIndex;
+
 	private Container contentPane;
 	private IUpdateable updateable;
 	
-	public ReturnButtonHandler(User user, LibraryItem libraryItem, Container contentPane, IUpdateable updateable) {
-		this.user = user;
-		this.libraryItem = libraryItem;
+	public ApproveRequestButtonHandler(Library library, int requestIndex, Container contentPane, IUpdateable updateable) {
+		this.library = library;
+		this.requestIndex = requestIndex;
 		this.contentPane = contentPane;
 		this.updateable = updateable;
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		switch(user.returnItem(libraryItem)) {
+		switch(library.approveRequest(requestIndex)) {
 		case 1:
 			if (updateable != null) {
 				updateable.update();
@@ -34,8 +34,8 @@ public class ReturnButtonHandler implements ActionListener {
 		case -1:
 			JOptionPane.showMessageDialog(
 				contentPane, 
-				"You don't have any borrowed books.", 
-				"Return failed !", 
+				"No requests to approve.", 
+				"Request Approval failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
 			
@@ -43,8 +43,8 @@ public class ReturnButtonHandler implements ActionListener {
 		case -2:
 			JOptionPane.showMessageDialog(
 				contentPane, 
-				"This library item is not borrowed.", 
-				"Return failed !", 
+				"Invalid request.", 
+				"Request Approval failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
 			
@@ -52,13 +52,14 @@ public class ReturnButtonHandler implements ActionListener {
 		case -3:
 			JOptionPane.showMessageDialog(
 				contentPane, 
-				"This library item couldn't be found in the library.", 
-				"Return failed !", 
+				"Library is full.", 
+				"Request Approval failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
 			
 			break;
 		default:
+			break;
 		}
 	}
 }

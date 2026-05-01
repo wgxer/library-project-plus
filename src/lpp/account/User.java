@@ -156,4 +156,8 @@ public class User extends Account implements Displayable{
 	public int getReturns() {
 		return returns;
 	}
+	
+	public double getFees() {
+		return fees;
+	}
 }

@@ -3,35 +3,42 @@ package lpp.gui.frame;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Font;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
-import lpp.AccountManager;
+import lpp.Library;
+import lpp.account.Author;
 import lpp.account.User;
+import lpp.gui.GUIUtils;
 import lpp.gui.IUpdateable;
 import lpp.gui.ViewFactory;
-import lpp.gui.handler.RateButtonHandler;
-import lpp.gui.handler.ReturnButtonHandler;
-import lpp.item.Book;
+import lpp.gui.handler.ShowParentCloseHandler;
 import lpp.item.LibraryItem;
 
-public class UserFrame extends JFrame implements IUpdateable {
+public class UserFrame extends JFrame implements IUpdateable, ActionListener {
+	private Library library;
 	private User user;
 
-	public UserFrame(User user) {
+	public UserFrame(Frame parent, Library library, User user) {
+		this.library = library;
 		this.user = user;
 		
 		setTitle("Library Management System - User Operations");
-		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		if (parent != null) {
+			addWindowListener(new ShowParentCloseHandler(parent));
+			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+		} else {
+			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		}
 
 		setSize(800, 600);
 		update();
@@ -46,66 +53,36 @@ public class UserFrame extends JFrame implements IUpdateable {
 		JPanel[] borrowedItemPanels = new JPanel[borrowedItemsCount];
 		
 		for (int i = 0; i < borrowedItemsCount; i++) {
-			Font nameFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
-			Font textFont = new Font(Font.SANS_SERIF, 0, 14);
-
-			LibraryItem item = borrowedItems[i];
-			
-			JLabel nameLabel = new JLabel(item.getName());
-			nameLabel.setFont(nameFont);
-			
-			String yearText = "";
-			
-			if (item instanceof Book) {
-				yearText = "  -  " + ((Book) item).getPublcationYear();
-			}
-			
-			JLabel authorLabel = new JLabel(" by: " + item.getAuthorName() + yearText);
-			authorLabel.setFont(textFont);
-			
-			JLabel pagesLabel = new JLabel(" Pages: " + item.getPages());
-			pagesLabel.setFont(textFont);
-			
-			String ratingText = "not rated";
-			
-			if (item.getReviewsCount() > 0) {
-				ratingText = String.format("%.2f out of 5 (%d)", item.getReviews(), item.getReviewsCount());
-			}
-			
-			JLabel ratingLabel = new JLabel(" Rating: " + ratingText);
-			ratingLabel.setFont(textFont);
-			
-			JButton returnButton = new JButton("Return");
-			returnButton.addActionListener(new ReturnButtonHandler(user, item, contentPane, this));
-			
-			JButton rateButton = new JButton("Rate");
-			rateButton.addActionListener(new RateButtonHandler(item, contentPane, this));
-			
-			borrowedItemPanels[i] = ViewFactory.vertical().fillWidth().gap(10).padding(10).roundedBorder(2).build(
-				ViewFactory.vertical().build(
-					nameLabel,
-					authorLabel
-				),
-				ViewFactory.vertical().build(
-					pagesLabel,
-					ratingLabel,
-					ViewFactory.vertical().fillWidth().alignX(Component.RIGHT_ALIGNMENT).build(
-						ViewFactory.horizontal().gap(12).build(returnButton, rateButton)
-					)
-				)
-			);
+			borrowedItemPanels[i] = GUIUtils.libraryItem(borrowedItems[i], user, this, this);
 		}
 		
 		Font welcomeFont = new Font(Font.SANS_SERIF, 0, 24);
 		JLabel welcomeLabel = new JLabel("Welcome, " + user.getUsername() + " !");
 		welcomeLabel.setFont(welcomeFont);
+		
+		JButton browseLibraryButton = new JButton("Browse Library");
+		browseLibraryButton.addActionListener(this);
+		
+		JLabel manuscriptsShowcasedLabel = null;
+		
+		if (user instanceof Author) {
+			manuscriptsShowcasedLabel = new JLabel(String.format("Manuscript showcased: %d manuscript(s)", ((Author) user).getManuscriptsShowcased()));
+		}
 
 		contentPane.removeAll();
 		contentPane.add(ViewFactory.vertical().padding(20).gap(10).build(welcomeLabel,
-				ViewFactory.vertical().padding(10, 0).build(
-					new JLabel(String.format("Balance: %.2f$", user.getBalance())),
-					new JLabel(String.format("Items borrowed in the past: %d items", user.getBorrows())),
-					new JLabel(String.format("Items returned in the past: %d items", user.getReturns()))
+				ViewFactory.horizontal().alignY(Component.BOTTOM_ALIGNMENT).build(
+					ViewFactory.vertical().fillWidth().padding(10, 0).build(
+						new JLabel(String.format("Balance: %.2f $", user.getBalance())),
+						new JLabel(String.format("Fees incurred: %.2f $", user.getFees())),
+						new JLabel(String.format("Items borrowed in the past: %d items", user.getBorrows())),
+						new JLabel(String.format("Items returned in the past: %d items", user.getReturns())),
+						manuscriptsShowcasedLabel
+						
+					),
+					ViewFactory.vertical().fillWidth().alignX(Component.RIGHT_ALIGNMENT).build(
+						browseLibraryButton
+					)
 				),
 				ViewFactory.vertical().padding(10, 0).build(
 						new JLabel("Borrowed Items (" + user.getItemsCount() + "):"),
@@ -116,5 +93,17 @@ public class UserFrame extends JFrame implements IUpdateable {
 		
 		contentPane.revalidate();
 		contentPane.repaint();
+	}
+	
+	public void actionPerformed(ActionEvent e) {
+		String action = e.getActionCommand();
+		
+		if (action.equals("Browse Library")) {
+			setVisible(false);
+			
+			BrowseLibraryFrame browseLibraryFrame = new BrowseLibraryFrame(this, library, user);
+			browseLibraryFrame.setLocation(getLocation());
+			browseLibraryFrame.setVisible(true);
+		}
 	}
 }

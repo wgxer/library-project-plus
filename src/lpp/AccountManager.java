@@ -1,6 +1,7 @@
 package lpp;
 
 import lpp.account.Account;
+import lpp.account.User;
 
 public class AccountManager {
 	private static AccountManager INSTANCE;
@@ -40,6 +41,33 @@ public class AccountManager {
 		}
 		
 		return null;
+	}
+	
+	public User[] searchUsers(String searchEntry) {
+		searchEntry = searchEntry.toLowerCase();
+		int usersCount = 0;
+		
+		for (int accountIndex = 0; accountIndex < accountsCount; accountIndex++) {
+			Account account = accounts[accountIndex];
+			
+			if (account instanceof User && account.getUsername().toLowerCase().contains(searchEntry)) {
+				usersCount++;
+			}
+		}
+		
+		User[] users = new User[usersCount];
+		int userIndex = 0;
+		
+		for (int accountIndex = 0; accountIndex < accountsCount; accountIndex++) {
+			Account account = accounts[accountIndex];
+			
+			if (account instanceof User && account.getUsername().toLowerCase().contains(searchEntry)) {
+				users[userIndex] = (User) account;
+				userIndex++;
+			}
+		}
+		
+		return users;
 	}
 	
 	/**

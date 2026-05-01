@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
-import lpp.account.User;
 import lpp.gui.IUpdateable;
 import lpp.item.LibraryItem;
 
@@ -23,10 +22,10 @@ public class RateButtonHandler implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		int rating = (int) JOptionPane.showInputDialog(contentPane, "Enter your rating out of 5",
+		Integer rating = (Integer) JOptionPane.showInputDialog(contentPane, "Enter your rating out of 5",
 				"Rating " + libraryItem.getName(), JOptionPane.PLAIN_MESSAGE, null, new Integer[] { 1, 2, 3, 4, 5 }, 3);
 	
-		if (libraryItem.reviewItem(rating)) {
+		if (rating != null && libraryItem.reviewItem(rating)) {
 			JOptionPane.showMessageDialog(contentPane, "Thank you for your rating !");
 			
 			if (updateable != null) {

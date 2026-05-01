@@ -1,15 +1,13 @@
 package lpp;
 
-import java.util.Scanner;
+//import java.util.Scanner;
 
 import javax.swing.JFrame;
 
-import lpp.account.Account;
 import lpp.account.Admin;
 import lpp.account.Author;
 import lpp.account.User;
 import lpp.gui.frame.AccountFrame;
-import lpp.gui.frame.UserFrame;
 import lpp.item.Book;
 import lpp.item.Manuscript;
 
@@ -30,38 +28,32 @@ public class Main {
 		accountManager.addAccount(user);
 		accountManager.addAccount(new Author("author", "author123", 30.0));
 
-		JFrame frame = new AccountFrame();
+		JFrame frame = new AccountFrame(library);
 		frame.setVisible(true);
 		
-//		accountManager.login("user", "user123");
-//		
-//		JFrame frame = new UserFrame((User) accountManager.getCurrentAccount());
-//		frame.setVisible(true);
-
-		if (1 == 1) return;
-		
-		Scanner input = new Scanner(System.in);
-
-		System.out.println("╭────────────────────────────────────────╮");
-		System.out.println("│                                        │");
-		System.out.println("│ Welcome to Library Management System ! │");
-		System.out.println("│                                        │");
-		System.out.println("╰────────────────────────────────────────╯");
-
-		while (true) {
-			Account account = AccountManager.getInstance().getCurrentAccount();
-
-			if (account == null) {
-				boolean exit = Menu.showLoginMenu(input);
-				
-				if (exit) {
-					break;
-				}
-			} else if (account instanceof Admin) {
-				Menu.showAdminMenu(input, library, (Admin) account);
-			} else if (account instanceof User) {
-				Menu.showUserMenu(input, library, (User) account);
-			}
-		}
+		// Menu code
+//		Scanner input = new Scanner(System.in);
+//
+//		System.out.println("╭────────────────────────────────────────╮");
+//		System.out.println("│                                        │");
+//		System.out.println("│ Welcome to Library Management System ! │");
+//		System.out.println("│                                        │");
+//		System.out.println("╰────────────────────────────────────────╯");
+//
+//		while (true) {
+//			Account account = AccountManager.getInstance().getCurrentAccount();
+//
+//			if (account == null) {
+//				boolean exit = Menu.showLoginMenu(input);
+//				
+//				if (exit) {
+//					break;
+//				}
+//			} else if (account instanceof Admin) {
+//				Menu.showAdminMenu(input, library, (Admin) account);
+//			} else if (account instanceof User) {
+//				Menu.showUserMenu(input, library, (User) account);
+//			}
+//		}
 	}
 }

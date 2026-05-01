@@ -14,6 +14,8 @@ import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
 import lpp.AccountManager;
+import lpp.Library;
+import lpp.account.Admin;
 import lpp.account.User;
 import lpp.gui.GUIUtils;
 import lpp.gui.ViewFactory;
@@ -31,9 +33,11 @@ public class AccountFrame extends JFrame implements ActionListener {
 	private JButton switchButton;
 	private JButton actionButton;
 	
+	private Library library;
 	private boolean signupMode;
 	
-	public AccountFrame() {
+	public AccountFrame(Library library) {
+		this.library = library;
 		signupMode = false;
 		
 		setTitle("Library Management System - Login");
@@ -90,11 +94,19 @@ public class AccountFrame extends JFrame implements ActionListener {
 			if (!signupMode) {				
 				if (buttonText.equals("Login")) {	
 					if (accountManager.login(username, password)) {
+						usernameField.setText("");
+						passwordField.setText("");
+						
 						if (accountManager.getCurrentAccount() instanceof User) {
 							setVisible(false);
 							
-							UserFrame userFrame = new UserFrame((User) accountManager.getCurrentAccount());
+							UserFrame userFrame = new UserFrame(this, library, (User) accountManager.getCurrentAccount());
 							userFrame.setVisible(true);
+						} else if (accountManager.getCurrentAccount() instanceof Admin) {
+							setVisible(false);
+							
+							AdminFrame adminFrame = new AdminFrame(this, library, (Admin) accountManager.getCurrentAccount());
+							adminFrame.setVisible(true);
 						} else {
 							JOptionPane.showMessageDialog(contentPane, "Login was succesful !");
 						}
@@ -152,9 +164,12 @@ public class AccountFrame extends JFrame implements ActionListener {
 					
 					switch(accountManager.addAccount(new User(username, password, 0.0))) {
 					case 0:
+						usernameField.setText("");
+						passwordField.setText("");
+
 						setVisible(false);
 						
-						UserFrame userFrame = new UserFrame((User) accountManager.getCurrentAccount());
+						UserFrame userFrame = new UserFrame(this, library, (User) accountManager.getCurrentAccount());
 						userFrame.setVisible(true);
 
 						break;
