@@ -1,8 +1,11 @@
 package lpp.account;
 
+import java.util.NoSuchElementException;
+
 import lpp.Displayable;
 import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
+import lpp.item.UnavailableItemException;
 
 public class User extends Account implements Displayable{
 
@@ -46,18 +49,17 @@ public class User extends Account implements Displayable{
 	 -2 = cannot borrow Manuscripts aka "Unpublished books"
 	 -3 = book is not available 
 	 -4 = insufficient balance */
-	public int borrowItem(LibraryItem b) {
+	public void borrowItem(LibraryItem b) throws Exception{
 		if (itemsCount == 5)
-			return -1;
+			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(b instanceof Manuscript)
-			return -2;
+			throw new IllegalArgumentException("Regular users cannot borrow Manuscripts!");
 		if(!b.isAvailable())
-			return -3;
-		
+			throw new UnavailableItemException("Item is not available at the moment!");
 		double price = b.calculatePrice();
 		
 		if (balance < price) {
-			return -4;
+			throw new InsufficientBalanceException("You do not have enough balance!");
 		}
 		
 		borrowedItems[itemsCount] = b;
@@ -71,7 +73,7 @@ public class User extends Account implements Displayable{
 		Admin.recordRevenue(price);
 		
 		b.useItem(this);
-		return 1;
+		
 		
 	}
 	/* return method using item object as parameter, its arguably easier to do it by index
@@ -79,18 +81,18 @@ public class User extends Account implements Displayable{
 	 -1 = there are no items in list to return
 	 -2 = item is already available
 	 -3 = item could not be found*/
-	public int returnItem(LibraryItem b) {
-		if (itemsCount == 0)
-			return -1;
+	public void returnItem(LibraryItem b) throws Exception {
 		if (b.isAvailable())
-			return -2;
+			throw new IllegalArgumentException("Item is already available!");
+		
 		int index=-3;
 		for(int i=0; i<itemsCount; i++)  {
 			if (b == borrowedItems[i])      // since User/item is an aggregation relationship, passed parameter could have the same reference as one of the entries
 			index= i;
 		}
 		if (index == -3)
-			return -3;
+			throw new NoSuchElementException("Item could not be found!");
+		
 		for(int i= index; i<itemsCount-1; i++) {
 			borrowedItems[i]= borrowedItems[i+1];
 		}
@@ -101,7 +103,6 @@ public class User extends Account implements Displayable{
 		
 		Admin.recordReturn();
 		
-		return 1;
 		
 	}
 	

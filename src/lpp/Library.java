@@ -1,6 +1,10 @@
 package lpp;
 
 import lpp.item.LibraryItem;
+import lpp.item.UnavailableItemException;
+
+import java.util.NoSuchElementException;
+
 import lpp.account.Author;
 
 public class Library {
@@ -31,18 +35,17 @@ public class Library {
 	  -1 = No items to remove
 	  -2 = Invalid input
 	  -3 = Cannot remove an item that is currently borrowed */
-	public int removeItem(int index) {
+	public void removeItem(int index) throws Exception {
 		if (itemsCount == 0)
-			return -1;
+			throw new NoSuchElementException("There are no items to remove!");
 		if (index<0 || index>=itemsCount)
-			return -2;
+			throw new IllegalArgumentException("Invalid Input!");
 		if (!items[index].isAvailable())
-			return -3;
+			throw new UnavailableItemException("This item is currently borrowed! Please try again later");  // custom exception
 		for(int i= index; i<itemsCount-1; i++) {
 			items[i]=items[i+1];
 		}
 		items[--itemsCount]= null;
-		return 1;
 		
 	}
 	
@@ -102,36 +105,34 @@ public class Library {
 	 1 = Request denied and removed
 	-1 = No requests to deny
 	-2 = Invalid input  */
-	public int denyRequest(int index) {
+	public void denyRequest(int index) throws Exception {
 		if (requestsCount == 0)
-			return -1;
+			throw new NoSuchElementException("There are no requests to deny at the moment!");
 		if (index<0 || index>=requestsCount)
-			return -2;
+			throw new IllegalArgumentException("Invalid input!");
 		for (int i=index; i<requestsCount-1; i++) {
 			requests[i] = requests[i+1];
 		}
 		requests[--requestsCount] = null;
-		return 1;
 	}
 	/* Method to approve and remove request to showcase manuscript based on passed index
 	 1 = Request approved and removed
 	-1 = No requests to approve
 	-2 = Invalid input
 	-3 = Items list is full  */
-	public int approveRequest(int index) {
+	public void approveRequest(int index) throws Exception {
 		if (requestsCount == 0)
-			return -1;
+			throw new NoSuchElementException("There are no requests to approve at the moment!");
 		if (index<0 || index>=requestsCount)
-			return -2;
+			throw new IllegalArgumentException("Invalid input!");
 		if (itemsCount == items.length)
-			return -3;
+			throw new IndexOutOfBoundsException("Items list is full!");
 		String authorName = requests[index].getAuthorName();
 		Author author = ((Author)AccountManager.getInstance().findAccount(authorName));
 		items[itemsCount++] = requests[index].copyItem();
 		author.showcaseManuscript();
 		author.modifyBalance(requests[index].calculatePrice()/10);
 		denyRequest(index);
-		return 1;
 	}
 	
 	public boolean displayRequestsList() {
