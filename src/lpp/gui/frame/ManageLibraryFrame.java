@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.NoSuchElementException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -27,6 +28,7 @@ import lpp.gui.ViewFactory;
 import lpp.gui.handler.ShowParentCloseHandler;
 import lpp.item.Book;
 import lpp.item.LibraryItem;
+import lpp.item.UnavailableItemException;
 
 public class ManageLibraryFrame extends JFrame implements IUpdateable, ActionListener, ListSelectionListener {
 	private Library library;
@@ -176,26 +178,20 @@ public class ManageLibraryFrame extends JFrame implements IUpdateable, ActionLis
 			);
 			
 			if (selectedOption == JOptionPane.YES_OPTION) {
-				switch (library.removeItem(library.findIndex(selectedLibraryItem, 0))) {
-				case 1:
+				try {
+					library.removeItem(library.findIndex(selectedLibraryItem, 0));
+
 					selectedLibraryItem = null;
 					libraryItemsList.setSelectedIndices(new int[] {});
 
 					refreshLibraryItems();
 					update();
-					
-					break;
-				case -1:
+				} catch(NoSuchElementException exception) {
 					JOptionPane.showMessageDialog(contentPane, "No items to remove.", "Item Deletion failed !", JOptionPane.ERROR_MESSAGE);
-					break;
-				case -2:
+				} catch(IllegalArgumentException exception) {
 					JOptionPane.showMessageDialog(contentPane, "Invalid item.", "Item Deletion failed !", JOptionPane.ERROR_MESSAGE);
-					break;
-				case -3:
+				} catch(UnavailableItemException exception) {
 					JOptionPane.showMessageDialog(contentPane, "This item can't be deleted because it's currently borrowed.", "Item Deletion failed !", JOptionPane.ERROR_MESSAGE);
-					break;
-				default:
-					break;
 				}
 			}
 		}

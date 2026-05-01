@@ -35,7 +35,7 @@ public class Author extends User {
 	 -3 = Item is not available
 	 -4 = Insufficient balance */
 	@Override
-	public void borrowItem(LibraryItem i) throws Exception  {
+	public void borrowItem(LibraryItem i)  {
 		if (itemsCount == 5)
 			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(!i.isAvailable())

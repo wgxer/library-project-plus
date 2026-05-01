@@ -1,15 +1,18 @@
 package lpp;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import lpp.account.Account;
 import lpp.account.Admin;
 import lpp.account.Author;
+import lpp.account.InsufficientBalanceException;
 import lpp.account.User;
 import lpp.item.Book;
 import lpp.item.Comment;
 import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
+import lpp.item.UnavailableItemException;
 
 public class Menu {
 
@@ -220,40 +223,26 @@ public class Menu {
 
 				switch (requestOperation) {
 				case 1:
-					switch (library.approveRequest(requestIndex)) {
-					case 1:
+					try {
+						library.approveRequest(requestIndex);
 						System.out.println("✔ Request has been approved sucessfully !");
-						break;
-					case -1:
+					} catch(NoSuchElementException e) {
 						System.out.println("✘ No requests to approve !");
-						break;
-					case -2:
+					} catch(IllegalArgumentException e) {
 						System.out.println("✘ Invalid request !");
-						break;
-					case -3:
+					} catch(IndexOutOfBoundsException e) {
 						System.out.println("✘ Library is full !");
-						break;
-					default:
-						System.out.println("! Something went wrong, please contact program developers.");
-						break;
 					}
 
 					break;
 				case 2:
-
-					switch (library.denyRequest(requestIndex)) {
-					case 1:
+					try {
+						library.denyRequest(requestIndex);
 						System.out.println("✔ Request has been declined sucessfully !");
-						break;
-					case -1:
+					} catch(NoSuchElementException e) {
 						System.out.println("✘ No requests to decline !");
-						break;
-					case -2:
+					} catch(IllegalArgumentException e) {
 						System.out.println("✘ Invalid request !");
-						break;
-					default:
-						System.out.println("! Something went wrong, please contact program developers.");
-						break;
 					}
 
 					break;
@@ -449,22 +438,15 @@ public class Menu {
 			LibraryItem deleteItem = libraryItems[deleteItemIndex];
 			int actualDeleteItemIndex = library.findIndex(deleteItem, 0);
 
-			switch (library.removeItem(actualDeleteItemIndex)) {
-			case 1:
+			try {
+				library.removeItem(actualDeleteItemIndex);
 				System.out.println("✔ Item has been removed sucessfully from the library !");
-				break;
-			case -1:
+			} catch (NoSuchElementException e) {
 				System.out.println("✘ No items to remove.");
-				break;
-			case -2:
+			} catch (IllegalArgumentException e) {
 				System.out.println("✘ Invalid input.");
-				break;
-			case -3:
+			} catch(UnavailableItemException e) {
 				System.out.println("✘ This item is currently borrowed, please try again later.");
-				break;
-			default:
-				System.out.println("! Something went wrong, please contact program developers.");
-				break;
 			}
 
 			break;
@@ -783,47 +765,29 @@ public class Menu {
 			switch (itemOperation) {
 			case 1:
 				if (userHasItem) {
-					switch (user.returnItem(item)) {
-					case 1:
+					try {
+						user.returnItem(item);
 						System.out.println("✔ '" + item.getName() + "' has been returned successfully !");
-						break;
-					case -1:
-						errorMessageLine1 = "You already don't have any";
-						errorMessageLine2 = "borrowed items.";
-						break;
-					case -2:
+					} catch(IllegalArgumentException e) {
 						errorMessageLine1 = "Item is already avaliable.";
-						break;
-					case -3:
+					} catch(NoSuchElementException e) {
 						errorMessageLine1 = "Item doesn't belong to the library.";
-						break;
-					default:
-						errorMessageLine1 = "Something went wrong, please report";
-						errorMessageLine2 = "to program developers.";
 						break;
 					}
 				} else {
-					switch (user.borrowItem(item)) {
-					case 1:
+					try {
+						user.borrowItem(item);
 						System.out.println("✔ '" + item.getName() + "' has been borrowed successfully !");
-						break;
-					case -1:
+					} catch(IndexOutOfBoundsException e) {
 						errorMessageLine1 = "No more than 5 items can be borrowed";
 						errorMessageLine2 = "at the same time.";
-						break;
-					case -2:
+					} catch(IllegalArgumentException e) {
 						errorMessageLine1 = "Manuscripts can't be borrowed by users.";
-						break;
-					case -3:
+					} catch(UnavailableItemException e) {
 						errorMessageLine1 = "Item is not avaliable right now,";
 						errorMessageLine2 = "please try later.";
-						break;
-					case -4:
+					} catch(InsufficientBalanceException e) {
 						errorMessageLine1 = "Insufficient balance.";
-						break;
-					default:
-						errorMessageLine1 = "Something went wrong, please report";
-						errorMessageLine2 = "to program developers.";
 						break;
 					}
 				}

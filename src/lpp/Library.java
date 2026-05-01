@@ -35,7 +35,7 @@ public class Library {
 	  -1 = No items to remove
 	  -2 = Invalid input
 	  -3 = Cannot remove an item that is currently borrowed */
-	public void removeItem(int index) throws Exception {
+	public void removeItem(int index) {
 		if (itemsCount == 0)
 			throw new NoSuchElementException("There are no items to remove!");
 		if (index<0 || index>=itemsCount)
@@ -105,7 +105,7 @@ public class Library {
 	 1 = Request denied and removed
 	-1 = No requests to deny
 	-2 = Invalid input  */
-	public void denyRequest(int index) throws Exception {
+	public void denyRequest(int index) {
 		if (requestsCount == 0)
 			throw new NoSuchElementException("There are no requests to deny at the moment!");
 		if (index<0 || index>=requestsCount)
@@ -120,7 +120,7 @@ public class Library {
 	-1 = No requests to approve
 	-2 = Invalid input
 	-3 = Items list is full  */
-	public void approveRequest(int index) throws Exception {
+	public void approveRequest(int index) {
 		if (requestsCount == 0)
 			throw new NoSuchElementException("There are no requests to approve at the moment!");
 		if (index<0 || index>=requestsCount)

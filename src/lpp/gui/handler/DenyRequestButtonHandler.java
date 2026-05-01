@@ -3,6 +3,7 @@ package lpp.gui.handler;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.NoSuchElementException;
 
 import javax.swing.JOptionPane;
 
@@ -24,14 +25,13 @@ public class DenyRequestButtonHandler implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		switch(library.denyRequest(requestIndex)) {
-		case 1:
+		try {
+			library.denyRequest(requestIndex);
+			
 			if (updateable != null) {
 				updateable.update();
 			}
-			
-			break;
-		case -1:
+		} catch(NoSuchElementException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"No requests to deny.", 
@@ -39,18 +39,13 @@ public class DenyRequestButtonHandler implements ActionListener {
 				JOptionPane.ERROR_MESSAGE
 			);
 			
-			break;
-		case -2:
+		} catch(IllegalArgumentException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"Invalid request.", 
 				"Request Decline failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		default:
-			break;
 		}
 	}
 }

@@ -3,6 +3,7 @@ package lpp.gui.handler;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.NoSuchElementException;
 
 import javax.swing.JOptionPane;
 
@@ -24,41 +25,26 @@ public class ReturnButtonHandler implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		switch(user.returnItem(libraryItem)) {
-		case 1:
+		try {
+			user.returnItem(libraryItem);
+
 			if (updateable != null) {
 				updateable.update();
 			}
-			
-			break;
-		case -1:
-			JOptionPane.showMessageDialog(
-				contentPane, 
-				"You don't have any borrowed books.", 
-				"Return failed !", 
-				JOptionPane.ERROR_MESSAGE
-			);
-			
-			break;
-		case -2:
+		} catch (IllegalArgumentException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"This library item is not borrowed.", 
 				"Return failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		case -3:
+		} catch(NoSuchElementException exception) { 
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"This library item couldn't be found in the library.", 
 				"Return failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		default:
 		}
 	}
 }

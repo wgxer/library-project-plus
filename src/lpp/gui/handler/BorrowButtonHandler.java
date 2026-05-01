@@ -6,9 +6,11 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JOptionPane;
 
+import lpp.account.InsufficientBalanceException;
 import lpp.account.User;
 import lpp.gui.IUpdateable;
 import lpp.item.LibraryItem;
+import lpp.item.UnavailableItemException;
 
 public class BorrowButtonHandler implements ActionListener {
 	private User user;
@@ -24,14 +26,14 @@ public class BorrowButtonHandler implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		switch(user.borrowItem(libraryItem)) {
-		case 1:
+		try {
+			user.borrowItem(libraryItem);
+
 			if (updateable != null) {
 				updateable.update();
 			}
 			
-			break;
-		case -1:
+		} catch(IndexOutOfBoundsException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"No more than 5 items can be borrowed at the same time.", 
@@ -39,17 +41,14 @@ public class BorrowButtonHandler implements ActionListener {
 				JOptionPane.ERROR_MESSAGE
 			);
 			
-			break;
-		case -2:
+		} catch(IllegalArgumentException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"Manuscripts can't be borrowed by users.", 
 				"Borrow failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		case -3:
+		} catch(UnavailableItemException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"Item is not avaliable right now, please try later.", 
@@ -57,18 +56,13 @@ public class BorrowButtonHandler implements ActionListener {
 				JOptionPane.ERROR_MESSAGE
 			);
 			
-			break;
-		case -4:
+		} catch(InsufficientBalanceException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"Insufficient balance.", 
 				"Borrow failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		default:
-			break;
 		}
 	}
 }

@@ -3,6 +3,7 @@ package lpp.gui.handler;
 import java.awt.Container;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.NoSuchElementException;
 
 import javax.swing.JOptionPane;
 
@@ -24,42 +25,34 @@ public class ApproveRequestButtonHandler implements ActionListener {
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		switch(library.approveRequest(requestIndex)) {
-		case 1:
+		try {
+			library.approveRequest(requestIndex);
+			
 			if (updateable != null) {
 				updateable.update();
 			}
 			
-			break;
-		case -1:
+		} catch(NoSuchElementException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"No requests to approve.", 
 				"Request Approval failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		case -2:
+		} catch(IllegalArgumentException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"Invalid request.", 
 				"Request Approval failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		case -3:
+		} catch(IndexOutOfBoundsException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"Library is full.", 
 				"Request Approval failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-			
-			break;
-		default:
-			break;
 		}
 	}
 }

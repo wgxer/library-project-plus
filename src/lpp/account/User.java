@@ -49,7 +49,7 @@ public class User extends Account implements Displayable{
 	 -2 = cannot borrow Manuscripts aka "Unpublished books"
 	 -3 = book is not available 
 	 -4 = insufficient balance */
-	public void borrowItem(LibraryItem b) throws Exception{
+	public void borrowItem(LibraryItem b) {
 		if (itemsCount == 5)
 			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(b instanceof Manuscript)
@@ -81,7 +81,7 @@ public class User extends Account implements Displayable{
 	 -1 = there are no items in list to return
 	 -2 = item is already available
 	 -3 = item could not be found*/
-	public void returnItem(LibraryItem b) throws Exception {
+	public void returnItem(LibraryItem b) {
 		if (b.isAvailable())
 			throw new IllegalArgumentException("Item is already available!");
 		
