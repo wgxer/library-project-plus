@@ -43,13 +43,8 @@ public class User extends Account implements Displayable{
 		this.returns = other.returns;
 	}
 	
-	/* Regular users may only borrow books
-	  1 = book borrowed successfully
-	 -1 = reached borrow limit
-	 -2 = cannot borrow Manuscripts aka "Unpublished books"
-	 -3 = book is not available 
-	 -4 = insufficient balance */
-	public void borrowItem(LibraryItem b) {
+	// Regular users may only borrow books
+	public void borrowItem(LibraryItem b) throws UnavailableItemException, InsufficientBalanceException{
 		if (itemsCount == 5)
 			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(b instanceof Manuscript)
@@ -76,11 +71,7 @@ public class User extends Account implements Displayable{
 		
 		
 	}
-	/* return method using item object as parameter, its arguably easier to do it by index
-	  1=  item returned successfully
-	 -1 = there are no items in list to return
-	 -2 = item is already available
-	 -3 = item could not be found*/
+	// return method using item object as parameter, its arguably easier to do it by index
 	public void returnItem(LibraryItem b) {
 		if (b.isAvailable())
 			throw new IllegalArgumentException("Item is already available!");

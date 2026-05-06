@@ -29,13 +29,9 @@ public class Author extends User {
 		return true;
      
 	}
-	/* Borrowing for authors is mostly similar to normal users except they can borrow manuscripts
-	  1 = Item succefully borrowed
-	 -1 = Reached the borrowing limit
-	 -3 = Item is not available
-	 -4 = Insufficient balance */
+	// Borrowing for authors is mostly similar to normal users except they can borrow manuscripts
 	@Override
-	public void borrowItem(LibraryItem i)  {
+	public void borrowItem(LibraryItem i) throws UnavailableItemException, InsufficientBalanceException  {
 		if (itemsCount == 5)
 			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(!i.isAvailable())

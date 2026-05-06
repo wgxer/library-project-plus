@@ -1,9 +1,11 @@
 package lpp.item;
 
+import java.io.Serializable;
+
 import lpp.Displayable;
 import lpp.account.User;
 
-public abstract class LibraryItem implements Displayable{
+public abstract class LibraryItem implements Displayable, Serializable{
 	protected static int itemsCount;
 	protected int ID;
 	protected double reviews;
@@ -106,6 +108,14 @@ public abstract class LibraryItem implements Displayable{
 
 	public int getTimesUsed() {
 		return timesUsed;
+	}
+	
+	public int returnID() {
+		return ID;
+	}
+	
+	public static int returnItemsCount() {
+		return itemsCount;
 	}
 	
 	

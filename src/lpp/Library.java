@@ -3,6 +3,14 @@ package lpp;
 import lpp.item.LibraryItem;
 import lpp.item.UnavailableItemException;
 
+import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.NoSuchElementException;
 
 import lpp.account.Author;
@@ -24,18 +32,77 @@ public class Library {
 		
 	}
 	
+	public void writeItems(String fileName) {
+		ObjectOutputStream itemsOOS = null;
+		try {
+			File itemsFile = new File(fileName);
+			FileOutputStream itemsFOS = new FileOutputStream(itemsFile);
+			itemsOOS = new ObjectOutputStream(itemsFOS);
+			
+			itemsOOS.writeInt(itemsCount);
+			for(int i = 0; i<itemsCount; i++) {
+				itemsOOS.writeObject(items[i]);
+			}
+	
+		} catch (IOException e) {
+			System.out.println(e.getMessage());
+		
+		} finally {
+			
+			try {
+				itemsOOS.close();
+		
+			} catch(IOException e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+	
+	public void readItems(String fileName) {
+		ObjectInputStream itemsOIS = null;
+		try {
+			File itemsFile = new File(fileName);
+			FileInputStream itemsFIS = new FileInputStream(itemsFile);
+			 itemsOIS = new ObjectInputStream(itemsFIS);
+		
+			int count = itemsOIS.readInt();
+			while(true) {
+			     try {
+				      LibraryItem readItem = (LibraryItem)itemsOIS.readObject();
+				      this.addItem(readItem);
+			 
+			     } catch (EOFException e) {
+			    	break;
+			   
+			     } catch (ClassNotFoundException e) {
+				  System.out.println(e.getMessage());
+			    	continue;
+			    }
+			  } 
+			
+			} catch (IOException e) {
+				System.out.println(e.getMessage());
+			
+			} finally {
+				
+				try {
+				itemsOIS.close();
+				
+				} catch (IOException e) {
+					System.out.println(e.getMessage());
+				}
+			}
+		} 
+		 
 	public boolean addItem(LibraryItem i) {
 		if(itemsCount == items.length)
 			return false;
 		items[itemsCount++]= i.copyItem();
 		return true;
 	}
-	/* Removes an item from list based on passed index that is from 1 to count
-	   1 = Item removed successfully
-	  -1 = No items to remove
-	  -2 = Invalid input
-	  -3 = Cannot remove an item that is currently borrowed */
-	public void removeItem(int index) {
+	
+	//Removes an item from list based on passed index that is from 1 to count
+	public void removeItem(int index) throws UnavailableItemException {
 		if (itemsCount == 0)
 			throw new NoSuchElementException("There are no items to remove!");
 		if (index<0 || index>=itemsCount)
@@ -80,9 +147,7 @@ public class Library {
 		}
 		return searchResult;
 	}
-	/* A recursive method that finds the index of the item in passed parameter, mainly devoloped to use after search
-	 -1 = No items on list
-	 -2 = Item could not be found */
+	// A recursive method that finds the index of the item in passed parameter, mainly devoloped to use after search 
 	public int findIndex(LibraryItem a, int from) {
 		if (itemsCount == 0)
 			return -1;
@@ -101,10 +166,7 @@ public class Library {
 		requests[requestsCount++] = request.copyItem();
 		return true;
 	}
-	/* Method to deny and remove request to showcase manuscript based on passed index
-	 1 = Request denied and removed
-	-1 = No requests to deny
-	-2 = Invalid input  */
+	// Method to deny and remove request to showcase manuscript based on passed index
 	public void denyRequest(int index) {
 		if (requestsCount == 0)
 			throw new NoSuchElementException("There are no requests to deny at the moment!");
@@ -115,11 +177,7 @@ public class Library {
 		}
 		requests[--requestsCount] = null;
 	}
-	/* Method to approve and remove request to showcase manuscript based on passed index
-	 1 = Request approved and removed
-	-1 = No requests to approve
-	-2 = Invalid input
-	-3 = Items list is full  */
+	//Method to approve and remove request to showcase manuscript based on passed index
 	public void approveRequest(int index) {
 		if (requestsCount == 0)
 			throw new NoSuchElementException("There are no requests to approve at the moment!");

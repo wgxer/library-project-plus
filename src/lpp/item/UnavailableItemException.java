@@ -1,6 +1,6 @@
 package lpp.item;
 
-public class UnavailableItemException extends RuntimeException{
+public class UnavailableItemException extends Exception{
 
 	
 	public UnavailableItemException(String message) {
