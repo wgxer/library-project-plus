@@ -148,4 +148,12 @@ public class AccountManager {
 		
 		return -1;
 	}
+	
+	public Account[] getAccounts() {
+		return accounts;
+	}
+	
+	public int getAccountsCount() {
+		return accountsCount;
+	}
 }

@@ -31,69 +31,7 @@ public class Library {
 		requestsCount = 0;
 		
 	}
-	
-	public void writeItems(String fileName) {
-		ObjectOutputStream itemsOOS = null;
-		try {
-			File itemsFile = new File(fileName);
-			FileOutputStream itemsFOS = new FileOutputStream(itemsFile);
-			itemsOOS = new ObjectOutputStream(itemsFOS);
-			
-			itemsOOS.writeInt(itemsCount);
-			for(int i = 0; i<itemsCount; i++) {
-				itemsOOS.writeObject(items[i]);
-			}
-	
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		
-		} finally {
-			
-			try {
-				itemsOOS.close();
-		
-			} catch(IOException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
-	
-	public void readItems(String fileName) {
-		ObjectInputStream itemsOIS = null;
-		try {
-			File itemsFile = new File(fileName);
-			FileInputStream itemsFIS = new FileInputStream(itemsFile);
-			 itemsOIS = new ObjectInputStream(itemsFIS);
-		
-			int count = itemsOIS.readInt();
-			while(true) {
-			     try {
-				      LibraryItem readItem = (LibraryItem)itemsOIS.readObject();
-				      this.addItem(readItem);
 			 
-			     } catch (EOFException e) {
-			    	break;
-			   
-			     } catch (ClassNotFoundException e) {
-				  System.out.println(e.getMessage());
-			    	continue;
-			    }
-			  } 
-			
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-			
-			} finally {
-				
-				try {
-				itemsOIS.close();
-				
-				} catch (IOException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-		} 
-		 
 	public boolean addItem(LibraryItem i) {
 		if(itemsCount == items.length)
 			return false;
