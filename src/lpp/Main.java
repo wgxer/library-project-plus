@@ -21,9 +21,14 @@ public class Main {
 		library.addItem(new Manuscript(5, "My Manuscript", "author", 1));
 		
 		User user = new User("user", "user123", 100.0);
-		user.borrowItem(library.getItems()[0]);
-		user.borrowItem(library.getItems()[1]);
-
+		
+		try {
+			user.borrowItem(library.getItems()[0]);
+			user.borrowItem(library.getItems()[1]);
+		} catch(Exception e) {
+			// Code is fine, this shouldn't happen
+		}
+		
 		accountManager.addAccount(new Admin("admin", "admin"));
 		accountManager.addAccount(user);
 		accountManager.addAccount(new Author("author", "author123", 30.0));
