@@ -11,7 +11,7 @@ import lpp.gui.frame.AccountFrame;
 public class Main {
 	public static void main(String[] args) {
 		AccountManager accountManager = AccountManager.getInstance();
-		Library library = new Library("Library", 1000);
+		Library library = new Library("Library");
 		
 		FileManager.readLibrary("library.dat", library, accountManager);
 		accountManager.addAccount(new Admin("admin", "admin")); // If admin account doesn't exist
