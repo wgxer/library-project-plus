@@ -1,16 +1,17 @@
 package lpp.account;
 
 import java.util.NoSuchElementException;
+import java.util.LinkedList; 
 
 import lpp.Displayable;
 import lpp.item.LibraryItem;
 import lpp.item.Manuscript;
 import lpp.item.UnavailableItemException;
 
-public class User extends Account implements Displayable{
+public class User extends Account implements Displayable {
 
 	protected double balance;
-	protected LibraryItem[] borrowedItems;
+	protected LinkedList<LibraryItem> borrowedItems; 
 	protected int itemsCount;
 	protected int borrows;
 	protected int returns;
@@ -20,7 +21,7 @@ public class User extends Account implements Displayable{
 		super(username, password);
 		this.balance=balance;
 		
-		borrowedItems= new LibraryItem[5];
+		borrowedItems = new LinkedList<LibraryItem>(); 
 		itemsCount=0;
 		
 		borrows=0;
@@ -32,11 +33,11 @@ public class User extends Account implements Displayable{
 		super(other);
 		this.balance = other.balance;
 		
-		this.borrowedItems = new LibraryItem[5];
+		this.borrowedItems = new LinkedList<LibraryItem>();
 		this.itemsCount = other.itemsCount;
 		
 		for (int i = 0; i < other.itemsCount; i++) {
-			this.borrowedItems[i] = other.borrowedItems[i];
+			this.borrowedItems.add(other.borrowedItems.get(i)); 
 		}
 		
 		this.borrows = other.borrows;
@@ -44,7 +45,7 @@ public class User extends Account implements Displayable{
 	}
 	
 	// Regular users may only borrow books
-	public void borrowItem(LibraryItem b) throws UnavailableItemException, InsufficientBalanceException{
+	public void borrowItem(LibraryItem b) throws UnavailableItemException, InsufficientBalanceException {
 		if (itemsCount == 5)
 			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(b instanceof Manuscript)
@@ -57,7 +58,7 @@ public class User extends Account implements Displayable{
 			throw new InsufficientBalanceException("You do not have enough balance!");
 		}
 		
-		borrowedItems[itemsCount] = b;
+		borrowedItems.add(b); 
 		itemsCount++;
 		borrows++;
 		
@@ -68,9 +69,8 @@ public class User extends Account implements Displayable{
 		Admin.recordRevenue(price);
 		
 		b.useItem(this);
-		
-		
 	}
+
 	// return method using item object as parameter, its arguably easier to do it by index
 	public void returnItem(LibraryItem b) {
 		if (b.isAvailable())
@@ -78,23 +78,18 @@ public class User extends Account implements Displayable{
 		
 		int index=-3;
 		for(int i=0; i<itemsCount; i++)  {
-			if (b == borrowedItems[i])      // since User/item is an aggregation relationship, passed parameter could have the same reference as one of the entries
+			if (b == borrowedItems.get(i)) 
 			index= i;
 		}
 		if (index == -3)
 			throw new NoSuchElementException("Item could not be found!");
 		
-		for(int i= index; i<itemsCount-1; i++) {
-			borrowedItems[i]= borrowedItems[i+1];
-		}
-		borrowedItems[itemsCount-1]= null;
+		borrowedItems.remove(index); 
 		b.returnItem();
 		returns++;
 		itemsCount--;
 		
 		Admin.recordReturn();
-		
-		
 	}
 	
 	public void display() {
@@ -115,10 +110,9 @@ public class User extends Account implements Displayable{
 		if(itemsCount == 0)
 			return false;
 		for(int i=1; i<=itemsCount; i++) {
-			System.out.println(i+"- "+borrowedItems[i-1].getName());
+			System.out.println(i+"- "+borrowedItems.get(i-1).getName()); 
 		}
 		return true;
-			
 	}
 	
 	public void modifyBalance(double value) {
@@ -126,14 +120,13 @@ public class User extends Account implements Displayable{
 			balance = 0;
 		else
 			balance += value;
-		
 	}
 	
 	public double getBalance() {
 		return balance;
 	}
 
-	public LibraryItem[] getBorrowedItems() {
+	public LinkedList<LibraryItem> getBorrowedItems() { 
 		return borrowedItems;
 	}
 
