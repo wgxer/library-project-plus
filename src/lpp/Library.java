@@ -17,59 +17,6 @@ public class Library {
 		this.items = new LinkedList<LibraryItem>();
 		this.requests = new LinkedList<LibraryItem>();
 	}
-	
-	public void writeItems(String fileName) {
-		ObjectOutputStream itemsOOS = null;
-		try {
-			File itemsFile = new File(fileName);
-			FileOutputStream itemsFOS = new FileOutputStream(itemsFile);
-			itemsOOS = new ObjectOutputStream(itemsFOS);
-			
-			itemsOOS.writeInt(items.size());
-			for(int i = 0; i < items.size(); i++) {
-				itemsOOS.writeObject(items.get(i));
-			}
-	
-		} catch (IOException e) {
-			System.out.println(e.getMessage());
-		} finally {
-			try {
-				if(itemsOOS != null) itemsOOS.close();
-			} catch(IOException e) {
-				System.out.println(e.getMessage());
-			}
-		}
-	}
-	
-	public void readItems(String fileName) {
-		ObjectInputStream itemsOIS = null;
-		try {
-			File itemsFile = new File(fileName);
-			FileInputStream itemsFIS = new FileInputStream(itemsFile);
-			itemsOIS = new ObjectInputStream(itemsFIS);
-		
-			while(true) {
-			     try {
-				      LibraryItem readItem = (LibraryItem)itemsOIS.readObject();
-				      this.addItem(readItem);
-			 
-			     } catch (EOFException e) {
-			    	break;
-			     } catch (ClassNotFoundException e) {
-				  System.out.println(e.getMessage());
-			    	continue;
-			    }
-			  } 
-			} catch (IOException e) {
-				System.out.println(e.getMessage());
-			} finally {
-				try {
-				if(itemsOIS != null) itemsOIS.close();
-				} catch (IOException e) {
-					System.out.println(e.getMessage());
-				}
-			}
-		} 
 		 
 	public boolean addItem(LibraryItem i) {
 		items.add(i.copyItem());
