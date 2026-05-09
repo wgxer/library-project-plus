@@ -21,6 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import lpp.Library;
+import lpp.LinkedList;
 import lpp.gui.GUIUtils;
 import lpp.gui.IUpdateable;
 import lpp.gui.LibraryItemListEntry;
@@ -122,10 +123,10 @@ public class ManageLibraryFrame extends JFrame implements IUpdateable, ActionLis
 	
 	private void refreshLibraryItems() {
 		libraryItemsListEntries = new LibraryItemListEntry[library.getItemsCount()];
-		LibraryItem[] libraryItems = library.getItems();
+		LinkedList<LibraryItem> libraryItems = library.getItems();
 		
 		for (int i = 0; i < libraryItemsListEntries.length; i++) {
-			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems[i]);
+			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
 		}
 	}
 	
@@ -136,11 +137,13 @@ public class ManageLibraryFrame extends JFrame implements IUpdateable, ActionLis
 		if (action.equals("Search")) {
 			String searchEntry = searchField.getText();
 			
-			LibraryItem[] libraryItems = library.searchItem(searchEntry);
-			libraryItemsListEntries = new LibraryItemListEntry[libraryItems.length];
+			LinkedList<LibraryItem> libraryItems = library.searchItem(searchEntry);
+			int libraryItemsCount = libraryItems.size();
 			
-			for (int i = 0; i < libraryItems.length; i++) {
-				libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems[i]);
+			libraryItemsListEntries = new LibraryItemListEntry[libraryItemsCount];
+			
+			for (int i = 0; i < libraryItemsCount; i++) {
+				libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
 			}
 			
 			update();

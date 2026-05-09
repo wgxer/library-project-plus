@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import lpp.Library;
+import lpp.LinkedList;
 import lpp.account.Admin;
 import lpp.gui.GUIUtils;
 import lpp.gui.IUpdateable;
@@ -48,13 +49,11 @@ public class AdminFrame extends JFrame implements IUpdateable, ActionListener {
 	public void update() {
 		Container contentPane = getContentPane();
 		
-		LibraryItem[] requests = library.getRequests();
-		int requestsCount = library.getRequestsCount();
-
-		JPanel[] requestPanels = new JPanel[requestsCount];
+		LinkedList<LibraryItem> requests = library.getRequests();
+		JPanel[] requestPanels = new JPanel[requests.size()];
 		
-		for (int i = 0; i < requestsCount; i++) {
-			LibraryItem request = requests[i];
+		for (int i = 0; i < requests.size(); i++) {
+			LibraryItem request = requests.get(i);
 			
 			JButton approveButton = new JButton("Approve");
 			approveButton.addActionListener(new ApproveRequestButtonHandler(library, i, contentPane, this));

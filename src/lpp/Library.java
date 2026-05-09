@@ -98,25 +98,19 @@ public class Library {
 	}
 
 	// Method that searches an item based on the names of the items, returns an array with items that qualify the criteria
-	public LibraryItem[] searchItem(String input) {
-		String itemName;
+	public LinkedList<LibraryItem> searchItem(String input) {
 		input = input.toLowerCase();
-		int size = 0;
-		for(int i = 0; i < items.size(); i++) {
-			itemName = items.get(i).getName().toLowerCase();
-			if(itemName.contains(input))
-				size++;
-		}
 		
-		LibraryItem[] searchResult = new LibraryItem[size];
-		int count = 0;
+		LinkedList<LibraryItem> searchResult = new LinkedList<LibraryItem>();
+		
 		for(int i = 0; i < items.size(); i++) {
-			itemName = items.get(i).getName().toLowerCase();
+			String itemName = items.get(i).getName().toLowerCase();
+			
 			if(itemName.contains(input)) {
-				searchResult[count] = items.get(i);
-				count++;
+				searchResult.add(items.get(i));
 			}
 		}
+		
 		return searchResult;
 	}
 

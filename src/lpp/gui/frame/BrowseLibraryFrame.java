@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import lpp.Library;
+import lpp.LinkedList;
 import lpp.account.Author;
 import lpp.account.User;
 import lpp.gui.GUIUtils;
@@ -58,10 +59,10 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 		}
 		
 		libraryItemsListEntries = new LibraryItemListEntry[library.getItemsCount()];
-		LibraryItem[] libraryItems = library.getItems();
+		LinkedList<LibraryItem> libraryItems = library.getItems();
 		
 		for (int i = 0; i < libraryItemsListEntries.length; i++) {
-			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems[i]);
+			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
 		}
 		
 		Container contentPane = getContentPane();
@@ -139,11 +140,11 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 		if (action.equals("Search")) {
 			String searchEntry = searchField.getText();
 			
-			LibraryItem[] libraryItems = library.searchItem(searchEntry);
-			libraryItemsListEntries = new LibraryItemListEntry[libraryItems.length];
+			LinkedList<LibraryItem> libraryItems = library.searchItem(searchEntry);
+			libraryItemsListEntries = new LibraryItemListEntry[libraryItems.size()];
 			
-			for (int i = 0; i < libraryItems.length; i++) {
-				libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems[i]);
+			for (int i = 0; i < libraryItems.size(); i++) {
+				libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
 			}
 			
 			update();

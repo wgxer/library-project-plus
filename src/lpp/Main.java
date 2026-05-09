@@ -21,8 +21,8 @@ public class Main {
 		
 		
 		try {
-			user.borrowItem(library.getItems()[0]);
-			user.borrowItem(library.getItems()[1]);
+			user.borrowItem(library.getItems().get(0));
+			user.borrowItem(library.getItems().get(1));
 		} catch(Exception e) {
 			// Code is fine, this shouldn't happen
 		}

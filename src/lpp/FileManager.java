@@ -19,21 +19,21 @@ public class FileManager {
 			FileOutputStream libraryFOS = new FileOutputStream(libraryFile);
 			libraryOOS = new ObjectOutputStream(libraryFOS);
 
-			LibraryItem[] itemsToWrite = library.getItems();
-			Account[] accountsToWrite = accountManager.getAccounts();
+			LinkedList<LibraryItem> itemsToWrite = library.getItems();
+			LinkedList<Account> accountsToWrite = accountManager.getAccounts();
 			
-			int itemsCount = library.getItemsCount();
-			int accountsCount = accountsToWrite.length;
+			int itemsCount = itemsToWrite.size();
+			int accountsCount = accountsToWrite.size();
 
 			libraryOOS.writeInt(itemsCount);
 
 			for (int i = 0; i < itemsCount; i++) {
-				libraryOOS.writeObject(itemsToWrite[i]);
+				libraryOOS.writeObject(itemsToWrite.get(i));
 			}
 			libraryOOS.writeInt(accountsCount);
 
 			for (int i = 0; i < accountsCount; i++) {
-				libraryOOS.writeObject(accountsToWrite[i]);
+				libraryOOS.writeObject(accountsToWrite.get(i));
 			}
 
 		} catch (IOException e) {

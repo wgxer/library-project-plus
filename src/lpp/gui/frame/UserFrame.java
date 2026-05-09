@@ -15,6 +15,7 @@ import javax.swing.JScrollPane;
 import javax.swing.WindowConstants;
 
 import lpp.Library;
+import lpp.LinkedList;
 import lpp.account.Author;
 import lpp.account.User;
 import lpp.gui.GUIUtils;
@@ -47,13 +48,13 @@ public class UserFrame extends JFrame implements IUpdateable, ActionListener {
 	public void update() {
 		Container contentPane = getContentPane();
 		
-		LibraryItem[] borrowedItems = user.getBorrowedItems();
+		LinkedList<LibraryItem> borrowedItems = user.getBorrowedItems();
 		int borrowedItemsCount = user.getItemsCount();
 
 		JPanel[] borrowedItemPanels = new JPanel[borrowedItemsCount];
 		
 		for (int i = 0; i < borrowedItemsCount; i++) {
-			borrowedItemPanels[i] = GUIUtils.libraryItem(borrowedItems[i], user, this, this);
+			borrowedItemPanels[i] = GUIUtils.libraryItem(borrowedItems.get(i), user, this, this);
 		}
 		
 		Font welcomeFont = new Font(Font.SANS_SERIF, 0, 24);

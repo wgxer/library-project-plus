@@ -16,6 +16,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
+import lpp.LinkedList;
 import lpp.account.Author;
 import lpp.account.User;
 import lpp.gui.GUIUtils;
@@ -87,14 +88,14 @@ public class CommentsFrame extends JFrame implements IUpdateable, ActionListener
 			previousScrollY = Integer.MAX_VALUE;
 		}
 		
-		Comment[] comments = manuscript.getComments();
+		LinkedList<Comment> comments = manuscript.getComments();
 		JPanel[] commentPanels = new JPanel[manuscript.getCommentsCount()];
 		
 		Font nameFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 		Font textFont = new Font(Font.SANS_SERIF, 0, 14);
 		
 		for (int i = 0; i < manuscript.getCommentsCount(); i++) {
-			Comment comment = comments[i];
+			Comment comment = comments.get(i);
 			
 			commentPanels[i] = ViewFactory.vertical().gap(10).padding(10).roundedBorder(3).fillWidth().build(
 				GUIUtils.labelWithFont(comment.getCommenter(), nameFont),

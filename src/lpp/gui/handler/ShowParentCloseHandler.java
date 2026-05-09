@@ -7,7 +7,6 @@ import java.awt.event.WindowListener;
 import lpp.AccountManager;
 import lpp.FileManager;
 import lpp.Library;
-import lpp.gui.frame.AccountFrame;
 
 public class ShowParentCloseHandler implements WindowListener {
 	private Frame parent;

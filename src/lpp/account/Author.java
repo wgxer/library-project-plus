@@ -41,7 +41,7 @@ public class Author extends User {
 		if(balance < price)
 			throw new InsufficientBalanceException("You do not have enough balance!");
 		}
-		borrowedItems[itemsCount] = i;
+		borrowedItems.add(i);
 		itemsCount++;
 		borrows++;
 		if(!(i.getAuthorName() == this.getUsername())) {

@@ -183,7 +183,7 @@ public class Menu {
 
 		switch (adminOperation) {
 		case 1:
-			LibraryItem[] requests = library.getRequests();
+			LinkedList<LibraryItem> requests = library.getRequests();
 			int requestsCount = library.getRequestsCount();
 
 			if (requestsCount == 0) {
@@ -197,7 +197,7 @@ public class Menu {
 				return;
 			}
 
-			LibraryItem request = requests[requestIndex];
+			LibraryItem request = requests.get(requestIndex);
 
 			do {
 				request.display();
@@ -422,20 +422,20 @@ public class Menu {
 				return;
 			}
 
-			LibraryItem[] libraryItems = searchItems(input, library);
+			LinkedList<LibraryItem> libraryItems = searchItems(input, library);
 
 			if (libraryItems == null) {
 				return;
 			}
 
-			int deleteItemIndex = selectLibraryItemMenu(input, libraryItems, libraryItems.length,
+			int deleteItemIndex = selectLibraryItemMenu(input, libraryItems, libraryItems.size(),
 					"Select an item to delete");
 
 			if (deleteItemIndex == -1) {
 				return;
 			}
 
-			LibraryItem deleteItem = libraryItems[deleteItemIndex];
+			LibraryItem deleteItem = libraryItems.get(deleteItemIndex);
 			int actualDeleteItemIndex = library.findIndex(deleteItem, 0);
 
 			try {
@@ -507,7 +507,7 @@ public class Menu {
 		switch (userOperation) {
 		case 1: // View all library books
 		case 2: // Search for library items
-			LibraryItem[] libraryItems;
+			LinkedList<LibraryItem> libraryItems;
 			int libraryItemsCount;
 
 			if (userOperation == 1) {
@@ -521,7 +521,7 @@ public class Menu {
 
 				}
 
-				libraryItemsCount = libraryItems.length;
+				libraryItemsCount = libraryItems.size();
 			}
 
 			boolean backToLibraryItems;
@@ -541,7 +541,7 @@ public class Menu {
 					return;
 				}
 
-				LibraryItem selectedItem = libraryItems[itemIndex];
+				LibraryItem selectedItem = libraryItems.get(itemIndex);
 
 				if (!userItemOperationsMenu(input, selectedItem, user, listName)) {
 					backToLibraryItems = true;
@@ -553,7 +553,7 @@ public class Menu {
 			do {
 				tryAgain = false;
 
-				LibraryItem[] borrowedItems = user.getBorrowedItems();
+				LinkedList<LibraryItem> borrowedItems = user.getBorrowedItems();
 				int itemsCount = user.getItemsCount();
 
 				if (itemsCount == 0) {
@@ -567,7 +567,7 @@ public class Menu {
 					return;
 				}
 
-				LibraryItem selectedItem = borrowedItems[itemIndex];
+				LibraryItem selectedItem = borrowedItems.get(itemIndex);
 
 				if (!userItemOperationsMenu(input, selectedItem, user, "currently borrowed items")) {
 					tryAgain = true;
@@ -654,7 +654,7 @@ public class Menu {
 		}
 	}
 
-	private static int selectLibraryItemMenu(Scanner input, LibraryItem[] libraryItems, int libraryItemsCount,
+	private static int selectLibraryItemMenu(Scanner input, LinkedList<LibraryItem> libraryItems, int libraryItemsCount,
 			String menuTitle) {
 
 		boolean tryAgain = false;
@@ -674,7 +674,7 @@ public class Menu {
 			System.out.printf("│ %-42s │%n", menuTitle + ":");
 
 			for (int i = 0; i < libraryItemsCount; i++) {
-				LibraryItem item = libraryItems[i];
+				LibraryItem item = libraryItems.get(i);
 				int itemNumber = i + 1;
 
 				System.out.printf("│ %-42s │%n", itemNumber + ". " + item.getName());
@@ -832,7 +832,7 @@ public class Menu {
 				int commentIndex;
 
 				while (true) {
-					Comment[] comments = manuscript.getComments();
+					LinkedList<Comment> comments = manuscript.getComments();
 					int commentsCount = manuscript.getCommentsCount();
 
 					System.out.println();
@@ -852,7 +852,7 @@ public class Menu {
 					}
 
 					for (int i = 0; i < commentsCount; i++) {
-						Comment comment = comments[i];
+						Comment comment = comments.get(i);
 						int commentNumber = i + 1;
 
 						System.out.printf("│ %-42s │%n", commentNumber + ". A comment by " + comment.getCommenter());
@@ -915,7 +915,7 @@ public class Menu {
 					if (commentIndex < 0 || commentIndex >= commentsCount) {
 						tryAgain = true;
 					} else {
-						comments[commentIndex].display();
+						comments.get(commentIndex).display();
 					}
 				}
 
@@ -938,9 +938,9 @@ public class Menu {
 		return true;
 	}
 
-	private static LibraryItem[] searchItems(Scanner input, Library library) {
+	private static LinkedList<LibraryItem> searchItems(Scanner input, Library library) {
 		boolean tryAgain = false;
-		LibraryItem[] libraryItems = null;
+		LinkedList<LibraryItem> libraryItems = null;
 
 		do {
 			System.out.println("╭────────────────────────────────────────╮");
@@ -968,7 +968,7 @@ public class Menu {
 
 			libraryItems = library.searchItem(searchPrompt);
 
-			if (libraryItems.length == 0) {
+			if (libraryItems.isEmpty()) {
 				tryAgain = true;
 			}
 		} while (tryAgain);

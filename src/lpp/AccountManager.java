@@ -142,6 +142,12 @@ public class AccountManager {
     }
     
     public LinkedList<Account> getAccounts() {
-        return accounts;
+        LinkedList<Account> result = new LinkedList<Account>();
+        
+        for (int i = 0; i < accounts.size(); i++) {
+			result.add(accounts.get(i));
+		}
+    	
+    	return result;
     }
 }

@@ -45,11 +45,11 @@ public class User extends Account implements Displayable {
 	}
 	
 	// Regular users may only borrow up to 3 items at a time
-	public void borrowItem(LibraryItem item) throws UnavailableItemException {
+	public void borrowItem(LibraryItem item) throws UnavailableItemException, InsufficientBalanceException {
 		if (itemsCount == 3)
 			throw new IllegalStateException("You have reached the maximum number of items borrowed! Please return an item and try again.");
 		if (item.calculatePrice() > balance)
-			throw new IllegalStateException("Insufficient balance! Please top up your account and try again.");
+			throw new InsufficientBalanceException("Insufficient balance! Please top up your account and try again.");
 		if (!item.isAvailable())
 			throw new UnavailableItemException("This item is currently unavailable! Please try again later.");
 		
@@ -60,16 +60,25 @@ public class User extends Account implements Displayable {
 		borrows++;
 	}
 	
-	public void returnItem(int index) {
-		if (borrowedItems.isEmpty())
-			throw new NoSuchElementException("You have no items to return!");
-		if (index < 0 || index >= itemsCount)
-			throw new IllegalArgumentException("Invalid input!");
+	public void returnItem(LibraryItem item) {
+		if (item.isAvailable())
+			throw new IllegalArgumentException("Item is already available!");
 		
-		borrowedItems.get(index).setAvailable(true);
-		borrowedItems.remove(index);
-		itemsCount--;
+		int index = -3;
+		
+		for(int i = 0; i < itemsCount; i++)  {
+			if (item == borrowedItems.get(i)) index = i;
+		}
+		
+		if (index == -3)
+			throw new NoSuchElementException("Item could not be found!");
+		
+		borrowedItems.remove(index); 
+		item.returnItem();
 		returns++;
+		itemsCount--;
+		
+		Admin.recordReturn();
 	}
 
 	public void display() {
