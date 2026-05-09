@@ -33,7 +33,7 @@ public class Author extends User {
 	@Override
 	public void borrowItem(LibraryItem i) throws UnavailableItemException, InsufficientBalanceException  {
 		if (borrowedItems.size() == 5)
-			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
+			throw new IllegalStateException("You have reached the borrow limit!");
 		if(!i.isAvailable())
 			throw new UnavailableItemException("Item is not available at the moment!");
 		double price = i.calculatePrice();

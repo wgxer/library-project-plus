@@ -33,7 +33,7 @@ public class BorrowButtonHandler implements ActionListener {
 				updateable.update();
 			}
 			
-		} catch(IndexOutOfBoundsException exception) {
+		} catch(IllegalStateException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"No more than 5 items can be borrowed at the same time.", 

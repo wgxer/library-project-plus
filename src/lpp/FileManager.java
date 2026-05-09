@@ -71,10 +71,6 @@ public class FileManager {
 					System.out.println(e.getMessage());
 					continue; // We can't read stream anymore
 
-				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println(e.getMessage());
-					continue;
-
 				}
 			}
 
@@ -91,9 +87,6 @@ public class FileManager {
 					System.out.println(e.getMessage());
 					break; // We can't read stream anymore
 
-				} catch (ArrayIndexOutOfBoundsException e) {
-					System.out.println(e.getMessage());
-					continue;
 				}
 			}
 		} catch (IOException e) {

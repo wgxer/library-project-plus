@@ -46,7 +46,7 @@ public class ApproveRequestButtonHandler implements ActionListener {
 				"Request Approval failed !", 
 				JOptionPane.ERROR_MESSAGE
 			);
-		} catch(IndexOutOfBoundsException exception) {
+		} catch(IllegalStateException exception) {
 			JOptionPane.showMessageDialog(
 				contentPane, 
 				"Library is full.", 

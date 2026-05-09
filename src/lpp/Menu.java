@@ -221,8 +221,6 @@ public class Menu {
 						System.out.println("✘ No requests to approve !");
 					} catch(IllegalArgumentException e) {
 						System.out.println("✘ Invalid request !");
-					} catch(IndexOutOfBoundsException e) {
-						System.out.println("✘ Library is full !");
 					}
 
 					break;
@@ -760,7 +758,7 @@ public class Menu {
 					try {
 						user.borrowItem(item);
 						System.out.println("✔ '" + item.getName() + "' has been borrowed successfully !");
-					} catch(IndexOutOfBoundsException e) {
+					} catch(IllegalStateException e) {
 						errorMessageLine1 = "No more than 5 items can be borrowed";
 						errorMessageLine2 = "at the same time.";
 					} catch(IllegalArgumentException e) {
