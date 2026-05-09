@@ -165,9 +165,7 @@ public class AccountFrame extends JFrame implements ActionListener {
 					try {
 						accountManager.addAccount(new User(username, password, 0.0));
 						
-						usernameField.setText("");
-						passwordField.setText("");
-
+						enterLoginMode();
 						setVisible(false);
 						
 						accountManager.login(username, password);
@@ -183,18 +181,26 @@ public class AccountFrame extends JFrame implements ActionListener {
 						);
 					}
 				} else if (buttonText.equals("Login")) {
-					setTitle("Library Management System - Login");
-					topLabel.setText("Login:");
-					
-					signupMode = false;
-					confirmPasswordContainer.setVisible(false);
-					
-					actionButton.setText("Login");
-
-					switchLabel.setText("Don't have an account?");
-					switchButton.setText("Signup");
+					enterLoginMode();
 				}
 			}
 		}
+	}
+	
+	private void enterLoginMode() {
+		usernameField.setText("");
+		passwordField.setText("");
+		confirmPasswordField.setText("");
+		
+		setTitle("Library Management System - Login");
+		topLabel.setText("Login:");
+		
+		signupMode = false;
+		confirmPasswordContainer.setVisible(false);
+		
+		actionButton.setText("Login");
+
+		switchLabel.setText("Don't have an account?");
+		switchButton.setText("Signup");
 	}
 }
