@@ -42,8 +42,7 @@ public class FileManager {
 		} finally {
 
 			try {
-				libraryOOS.close();
-
+				if (libraryOOS != null) libraryOOS.close();
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 			}
@@ -102,7 +101,7 @@ public class FileManager {
 
 		} finally {
 			try {
-				libraryOIS.close();
+				if (libraryOIS != null) libraryOIS.close();
 			} catch (IOException e) {
 				System.out.println(e.getMessage());
 			}
