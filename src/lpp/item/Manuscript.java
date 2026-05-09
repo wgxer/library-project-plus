@@ -1,6 +1,6 @@
 package lpp.item;
 
-import java.util.LinkedList;
+import lpp.LinkedList;
 
 public class Manuscript extends LibraryItem {
 	
@@ -13,6 +13,7 @@ public class Manuscript extends LibraryItem {
 	public Manuscript(int pages, String name, String authorName, int age) {
 		super(pages, name, authorName);
 		this.age= age;
+		// Initializing our manual LinkedList
 		comments= new LinkedList<Comment>();
 		commentsCount=0;
 	}
@@ -20,8 +21,10 @@ public class Manuscript extends LibraryItem {
 	public Manuscript(Manuscript m) {
 		super(m);
 		this.age= m.age;
+		
 		this.comments= new LinkedList<Comment>();
 		for(int i=0; i<m.commentsCount; i++) {
+			// Using get(i) from our LinkedList class
 			this.comments.add(new Comment(m.comments.get(i)));
 		}
 		this.commentsCount= m.commentsCount;
@@ -39,6 +42,7 @@ public class Manuscript extends LibraryItem {
 			return -1;
 		if (comment.length() > 120)
 			return -2;
+		// Using our manual add method
 		comments.add(new Comment(usedBy.getUsername(), comment));
 		commentsCount++;
 		return 1;
@@ -53,6 +57,7 @@ public class Manuscript extends LibraryItem {
 			return -1;
 		if (index<1 || index>100)
 			return -2;
+		
 		comments.get(index-1).display();
 		return 1;
 	}
@@ -62,6 +67,7 @@ public class Manuscript extends LibraryItem {
 		if (commentsCount == 0)
 			return false;
 		for (int i=1; i<=commentsCount; i++) {
+			
 			System.out.println(i+"- Comment left by "+comments.get(i-1).getCommenter());
 			
 		} return true;
@@ -85,6 +91,7 @@ public class Manuscript extends LibraryItem {
 	public int getAge() {
 		return age;
 	}
+	
 	public LinkedList<Comment> getComments() {
 		return comments;
 	}

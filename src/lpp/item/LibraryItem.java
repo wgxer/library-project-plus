@@ -16,6 +16,7 @@ public abstract class LibraryItem implements Displayable, Serializable{
 	protected boolean isAvailable;
 	protected User usedBy;
 	protected int timesUsed;
+	protected boolean available;
 	
 	public LibraryItem(int pages, String name, String authorName) {
 		this.pages = pages;
@@ -116,6 +117,9 @@ public abstract class LibraryItem implements Displayable, Serializable{
 	
 	public static int returnItemsCount() {
 		return itemsCount;
+	}
+	public void setAvailable(boolean available) {
+	    this.available = available;
 	}
 	
 	
