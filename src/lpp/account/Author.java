@@ -22,7 +22,7 @@ public class Author extends User {
 	
 	// Method that makes a Manuscript and submit request for showcasing to admin
 	public boolean submitManuscript(int pages, String name, Library library) {
-		if (library.getRequestsCount() == 10)
+		if (library.getRequests().size() == 10)
 			return false;
 		LibraryItem manuscript = new Manuscript(pages, name, this.getUsername(), 1);
 		library.addRequest(manuscript);
@@ -32,7 +32,7 @@ public class Author extends User {
 	// Borrowing for authors is mostly similar to normal users except they can borrow manuscripts
 	@Override
 	public void borrowItem(LibraryItem i) throws UnavailableItemException, InsufficientBalanceException  {
-		if (itemsCount == 5)
+		if (borrowedItems.size() == 5)
 			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
 		if(!i.isAvailable())
 			throw new UnavailableItemException("Item is not available at the moment!");
@@ -41,14 +41,17 @@ public class Author extends User {
 		if(balance < price)
 			throw new InsufficientBalanceException("You do not have enough balance!");
 		}
+		
 		borrowedItems.add(i);
-		itemsCount++;
 		borrows++;
-		if(!(i.getAuthorName() == this.getUsername())) {
-		balance -= price;
-		fees += price;
-		Admin.recordRevenue(price);
-	}
+		
+		if(!i.getAuthorName().equals(this.getUsername())) {
+			balance -= price;
+			fees += price;
+			
+			Admin.recordRevenue(price);
+		}
+		
 		Admin.recordBorrow();
 		
 		i.useItem(this);
@@ -60,7 +63,7 @@ public class Author extends User {
 		    System.out.println("├─────────────────────────────────────────────────────────────────┤");
 	        System.out.printf ("│ %-30s : %-30s │\n", "Username", getUsername());
 	        System.out.printf ("│ %-30s : %-30.2f │\n", "Balance", balance);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", itemsCount);
+	        System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", borrowedItems.size());
 	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed", borrows);
 	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned", returns);
 	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred", fees);

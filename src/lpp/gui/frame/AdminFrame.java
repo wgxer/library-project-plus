@@ -50,7 +50,9 @@ public class AdminFrame extends JFrame implements IUpdateable, ActionListener {
 		Container contentPane = getContentPane();
 		
 		LinkedList<LibraryItem> requests = library.getRequests();
-		JPanel[] requestPanels = new JPanel[requests.size()];
+		int requestsCount = requests.size();
+		
+		JPanel[] requestPanels = new JPanel[requestsCount];
 		
 		for (int i = 0; i < requests.size(); i++) {
 			LibraryItem request = requests.get(i);
@@ -94,7 +96,7 @@ public class AdminFrame extends JFrame implements IUpdateable, ActionListener {
 					)
 				),
 				ViewFactory.vertical().padding(10, 0).build(
-					new JLabel("Showcase Manuscript Requests (" + library.getRequestsCount() + "):"),
+					new JLabel("Showcase Manuscript Requests (" + requestsCount + "):"),
 					new JScrollPane(
 						ViewFactory.vertical().padding(0, 0, 0, 10).gap(12).build(requestPanels), 
 						JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, 

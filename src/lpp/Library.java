@@ -178,15 +178,7 @@ public class Library {
 		return items;
 	}
 
-	public int getItemsCount() {
-		return items.size();
-	}
-
 	public LinkedList<LibraryItem> getRequests() {
 		return requests;
-	}
-
-	public int getRequestsCount() {
-		return requests.size();
 	}
 }

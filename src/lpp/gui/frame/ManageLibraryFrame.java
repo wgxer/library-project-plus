@@ -122,8 +122,8 @@ public class ManageLibraryFrame extends JFrame implements IUpdateable, ActionLis
 	}
 	
 	private void refreshLibraryItems() {
-		libraryItemsListEntries = new LibraryItemListEntry[library.getItemsCount()];
 		LinkedList<LibraryItem> libraryItems = library.getItems();
+		libraryItemsListEntries = new LibraryItemListEntry[libraryItems.size()];
 		
 		for (int i = 0; i < libraryItemsListEntries.length; i++) {
 			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));

@@ -11,8 +11,7 @@ import lpp.item.UnavailableItemException;
 public class User extends Account implements Displayable {
 
 	protected double balance;
-	protected LinkedList<LibraryItem> borrowedItems; 
-	protected int itemsCount;
+	protected LinkedList<LibraryItem> borrowedItems;
 	protected int borrows;
 	protected int returns;
 	protected double fees;
@@ -21,8 +20,7 @@ public class User extends Account implements Displayable {
 		super(username, password);
 		this.balance = balance;
 		
-		borrowedItems = new LinkedList<LibraryItem>(); 
-		itemsCount = 0;
+		borrowedItems = new LinkedList<LibraryItem>();
 		
 		borrows = 0;
 		returns = 0;
@@ -34,9 +32,8 @@ public class User extends Account implements Displayable {
 		this.balance = other.balance;
 		
 		this.borrowedItems = new LinkedList<LibraryItem>();
-		this.itemsCount = other.itemsCount;
 		
-		for (int i = 0; i < other.itemsCount; i++) {
+		for (int i = 0; i < other.borrowedItems.size(); i++) {
 			this.borrowedItems.add(other.borrowedItems.get(i)); 
 		}
 		
@@ -46,7 +43,7 @@ public class User extends Account implements Displayable {
 	
 	// Regular users may only borrow up to 3 items at a time
 	public void borrowItem(LibraryItem item) throws UnavailableItemException, InsufficientBalanceException {
-		if (itemsCount == 3)
+		if (borrowedItems.size() == 3)
 			throw new IllegalStateException("You have reached the maximum number of items borrowed! Please return an item and try again.");
 		if (item.calculatePrice() > balance)
 			throw new InsufficientBalanceException("Insufficient balance! Please top up your account and try again.");
@@ -56,7 +53,6 @@ public class User extends Account implements Displayable {
 		borrowedItems.add(item);
 		item.setAvailable(false);
 		modifyBalance(-item.calculatePrice());
-		itemsCount++;
 		borrows++;
 	}
 	
@@ -66,7 +62,7 @@ public class User extends Account implements Displayable {
 		
 		int index = -3;
 		
-		for(int i = 0; i < itemsCount; i++)  {
+		for(int i = 0; i < borrowedItems.size(); i++)  {
 			if (item == borrowedItems.get(i)) index = i;
 		}
 		
@@ -76,7 +72,6 @@ public class User extends Account implements Displayable {
 		borrowedItems.remove(index); 
 		item.returnItem();
 		returns++;
-		itemsCount--;
 		
 		Admin.recordReturn();
 	}
@@ -87,7 +82,7 @@ public class User extends Account implements Displayable {
 		System.out.println("├─────────────────────────────────────────────────────────────────┤");
 		System.out.printf ("│ %-30s : %-30s │\n", "Username", getUsername());
 		System.out.printf ("│ %-30s : %-30.2f │\n", "Balance", balance);
-		System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", itemsCount);
+		System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", borrowedItems.size());
 		System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed", borrows);
 		System.out.printf ("│ %-30s : %-30d │\n", "Items returned", returns);
 		System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred", fees);
@@ -95,9 +90,9 @@ public class User extends Account implements Displayable {
 	}
 	
 	public boolean displayItemsList() {
-		if(itemsCount == 0)
+		if(borrowedItems.isEmpty())
 			return false;
-		for(int i = 1; i <= itemsCount; i++) {
+		for(int i = 1; i <= borrowedItems.size(); i++) {
 			System.out.println(i + "- " + borrowedItems.get(i-1).getName()); 
 		}
 		return true;
@@ -116,10 +111,6 @@ public class User extends Account implements Displayable {
 
 	public LinkedList<LibraryItem> getBorrowedItems() {
 		return borrowedItems;
-	}
-
-	public int getItemsCount() {
-		return itemsCount;
 	}
 
 	public int getBorrows() {

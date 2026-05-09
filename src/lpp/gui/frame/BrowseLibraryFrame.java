@@ -58,8 +58,8 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		}
 		
-		libraryItemsListEntries = new LibraryItemListEntry[library.getItemsCount()];
 		LinkedList<LibraryItem> libraryItems = library.getItems();
+		libraryItemsListEntries = new LibraryItemListEntry[libraryItems.size()];
 		
 		for (int i = 0; i < libraryItemsListEntries.length; i++) {
 			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));

@@ -49,7 +49,7 @@ public class UserFrame extends JFrame implements IUpdateable, ActionListener {
 		Container contentPane = getContentPane();
 		
 		LinkedList<LibraryItem> borrowedItems = user.getBorrowedItems();
-		int borrowedItemsCount = user.getItemsCount();
+		int borrowedItemsCount = borrowedItems.size();
 
 		JPanel[] borrowedItemPanels = new JPanel[borrowedItemsCount];
 		
@@ -86,7 +86,7 @@ public class UserFrame extends JFrame implements IUpdateable, ActionListener {
 					)
 				),
 				ViewFactory.vertical().padding(10, 0).build(
-						new JLabel("Borrowed Items (" + user.getItemsCount() + "):"),
+						new JLabel("Borrowed Items (" + borrowedItemsCount + "):"),
 						new JScrollPane(ViewFactory.vertical().padding(0, 0, 0, 10).gap(12).build(borrowedItemPanels), JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER)
 					)
 				)

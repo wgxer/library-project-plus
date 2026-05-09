@@ -20,6 +20,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import lpp.AccountManager;
+import lpp.LinkedList;
 import lpp.account.Admin;
 import lpp.account.Author;
 import lpp.account.User;
@@ -153,11 +154,11 @@ public class ManageUsersFrame extends JFrame implements IUpdateable, ActionListe
 	private void refreshUsers() {
 		AccountManager accountManager = AccountManager.getInstance();
 		
-		User[] users = accountManager.searchUsers(currentSearchEntry);
-		userListEntries = new UserListEntry[users.length];
+		LinkedList<User> users = accountManager.searchUsers(currentSearchEntry);
+		userListEntries = new UserListEntry[users.size()];
 		
-		for (int i = 0; i < users.length; i++) {
-			userListEntries[i] = new UserListEntry(users[i]);
+		for (int i = 0; i < userListEntries.length; i++) {
+			userListEntries[i] = new UserListEntry(users.get(i));
 		}
 	}
 	

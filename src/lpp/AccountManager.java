@@ -7,13 +7,10 @@ public class AccountManager {
 	private static AccountManager INSTANCE;
     
     private LinkedList<Account> accounts; 
-    private int accountsCount;
-    
     private Account currentAccount;
     
     private AccountManager(int capacity) {
-        accounts = new LinkedList<Account>(); 
-        accountsCount = 0;
+        accounts = new LinkedList<Account>();
     }
     
     public static boolean init(int capacity) {
@@ -43,25 +40,15 @@ public class AccountManager {
         return null;
     }
     
-    public User[] searchUsers(String searchEntry) {
+    public LinkedList<User> searchUsers(String searchEntry) {
         searchEntry = searchEntry.toLowerCase();
-        int usersCount = 0;
+        
+        LinkedList<User> users = new LinkedList<User>();
         
         for (int accountIndex = 0; accountIndex < accounts.size(); accountIndex++) {
             Account account = accounts.get(accountIndex);
             if (account instanceof User && account.getUsername().toLowerCase().contains(searchEntry)) {
-                usersCount++;
-            }
-        }
-        
-        User[] users = new User[usersCount];
-        int userIndex = 0;
-        
-        for (int accountIndex = 0; accountIndex < accounts.size(); accountIndex++) {
-            Account account = accounts.get(accountIndex);
-            if (account instanceof User && account.getUsername().toLowerCase().contains(searchEntry)) {
-                users[userIndex] = (User) account;
-                userIndex++;
+                users.add((User) account);
             }
         }
         
@@ -81,7 +68,6 @@ public class AccountManager {
         }
         
         accounts.add(account);
-        accountsCount++;
         return 0;
     }
     
@@ -104,7 +90,6 @@ public class AccountManager {
         }
         
         accounts.remove(accountIndex);
-        accountsCount--;
         return true;
     }
     

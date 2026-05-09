@@ -89,12 +89,12 @@ public class CommentsFrame extends JFrame implements IUpdateable, ActionListener
 		}
 		
 		LinkedList<Comment> comments = manuscript.getComments();
-		JPanel[] commentPanels = new JPanel[manuscript.getCommentsCount()];
+		JPanel[] commentPanels = new JPanel[comments.size()];
 		
 		Font nameFont = new Font(Font.SANS_SERIF, Font.BOLD, 16);
 		Font textFont = new Font(Font.SANS_SERIF, 0, 14);
 		
-		for (int i = 0; i < manuscript.getCommentsCount(); i++) {
+		for (int i = 0; i < commentPanels.length; i++) {
 			Comment comment = comments.get(i);
 			
 			commentPanels[i] = ViewFactory.vertical().gap(10).padding(10).roundedBorder(3).fillWidth().build(

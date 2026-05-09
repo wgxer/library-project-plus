@@ -184,7 +184,7 @@ public class Menu {
 		switch (adminOperation) {
 		case 1:
 			LinkedList<LibraryItem> requests = library.getRequests();
-			int requestsCount = library.getRequestsCount();
+			int requestsCount = requests.size();
 
 			if (requestsCount == 0) {
 				System.out.println("✘ No manuscript showcase requests, please recheck later !");
@@ -417,7 +417,7 @@ public class Menu {
 
 			break;
 		case 8:
-			if (library.getItemsCount() == 0) {
+			if (library.getItems().isEmpty()) {
 				System.out.println("✘ No items to remove.");
 				return;
 			}
@@ -512,7 +512,7 @@ public class Menu {
 
 			if (userOperation == 1) {
 				libraryItems = library.getItems();
-				libraryItemsCount = library.getItemsCount();
+				libraryItemsCount = libraryItems.size();
 			} else {
 				libraryItems = searchItems(input, library);
 
@@ -554,7 +554,7 @@ public class Menu {
 				tryAgain = false;
 
 				LinkedList<LibraryItem> borrowedItems = user.getBorrowedItems();
-				int itemsCount = user.getItemsCount();
+				int itemsCount = borrowedItems.size();
 
 				if (itemsCount == 0) {
 					System.out.println("✘ You don't have any borrowed items to browse.");
@@ -833,7 +833,7 @@ public class Menu {
 
 				while (true) {
 					LinkedList<Comment> comments = manuscript.getComments();
-					int commentsCount = manuscript.getCommentsCount();
+					int commentsCount = comments.size();
 
 					System.out.println();
 					System.out.println("╭────────────────────────────────────────────╮");
