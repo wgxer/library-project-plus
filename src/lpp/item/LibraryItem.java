@@ -6,8 +6,6 @@ import lpp.Displayable;
 import lpp.account.User;
 
 public abstract class LibraryItem implements Displayable, Serializable{
-	protected static int itemsCount;
-	protected int ID;
 	protected double reviews;
 	protected int reviewsCount;
 	protected String authorName;
@@ -27,7 +25,6 @@ public abstract class LibraryItem implements Displayable, Serializable{
 		reviews=0;
 		reviewsCount=0;
 		timesUsed=0;
-		ID = itemsCount++;
 	}
 	
 	public LibraryItem(LibraryItem i) {
@@ -39,7 +36,6 @@ public abstract class LibraryItem implements Displayable, Serializable{
 		this.reviews= i.reviews;
 		this.reviewsCount= i.reviewsCount;
 		this.timesUsed= i.timesUsed;
-		this.ID = i.ID;
 	}
 	
 	public abstract LibraryItem copyItem();
@@ -111,13 +107,6 @@ public abstract class LibraryItem implements Displayable, Serializable{
 		return timesUsed;
 	}
 	
-	public int returnID() {
-		return ID;
-	}
-	
-	public static int returnItemsCount() {
-		return itemsCount;
-	}
 	public void setAvailable(boolean available) {
 	    this.available = available;
 	}
