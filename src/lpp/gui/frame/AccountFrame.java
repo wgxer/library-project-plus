@@ -162,8 +162,9 @@ public class AccountFrame extends JFrame implements ActionListener {
 						return;
 					}
 					
-					switch(accountManager.addAccount(new User(username, password, 0.0))) {
-					case 0:
+					try {
+						accountManager.addAccount(new User(username, password, 0.0));
+						
 						usernameField.setText("");
 						passwordField.setText("");
 
@@ -173,27 +174,13 @@ public class AccountFrame extends JFrame implements ActionListener {
 						
 						UserFrame userFrame = new UserFrame(this, library, (User) accountManager.getCurrentAccount());
 						userFrame.setVisible(true);
-
-						break;
-					case -1:
+					} catch(IllegalArgumentException exception) {
 						JOptionPane.showMessageDialog(
 							contentPane, 
 							"A user with that username already exists, please choose another username.", 
 							"Signup failed !", 
 							JOptionPane.ERROR_MESSAGE
 						);
-						
-						break;
-					case -2:
-						JOptionPane.showMessageDialog(
-							contentPane, 
-							"System is uncapable of adding more accounts, please contact library adminstrators !", 
-							"Signup failed !", 
-							JOptionPane.ERROR_MESSAGE
-						);
-
-						break;
-					default:
 					}
 				} else if (buttonText.equals("Login")) {
 					setTitle("Library Management System - Login");

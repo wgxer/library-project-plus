@@ -1,5 +1,7 @@
 package lpp.account;
 
+import java.util.NoSuchElementException;
+
 import lpp.AccountManager;
 
 public class Admin extends Account {
@@ -20,29 +22,24 @@ public class Admin extends Account {
 	 *  -2 if account is not a user
 	 *  -3 if account is already an author
 	 */
-	public int upgradeUser(String username) {
+	public void upgradeUser(String username) {
 		AccountManager accountManager = AccountManager.getInstance();
 		Account account = accountManager.findAccount(username);
 		
 		if (account == null) {
-			return -1;
+			throw new NoSuchElementException("Username `" + username + "` not found.");
 		}
 		
 		if (!(account instanceof User)) {
-			return -2;
+			throw new IllegalArgumentException("`" + username + "` is not a user.");
 		}
 		
 		if (account instanceof Author) {
-			return -3;
+			throw new IllegalArgumentException("`" + username + "` is already an author.");
 		}
 		
 		Author newAccount = new Author((User) account);
-		
-		if (!accountManager.updateAccount(newAccount)) {
-			return -1;
-		}
-		
-		return 0;
+		accountManager.updateAccount(newAccount);
 	}
 	
 	public static int getTotalBorrows() {

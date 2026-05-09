@@ -141,19 +141,10 @@ public class Menu {
 			}
 		} while (tryAgain);
 
-		switch (accountManager.addAccount(new User(username, password, 0))) {
-		case 0:
-			System.out.println("✔ Welcome " + username + " to library for first time!");
-			accountManager.login(username, password);
-
-			break;
-		case -2:
-			System.out.println("! System cannot handle more accounts, please contact program developers !");
-			break;
-		default:
-			System.out.println("! Something went wrong, please contact program developers !");
-			break;
-		}
+		accountManager.addAccount(new User(username, password, 0));
+		
+		System.out.println("✔ Welcome " + username + " to library for first time!");
+		accountManager.login(username, password);
 	}
 
 	public static void showAdminMenu(Scanner input, Library library, Admin admin) {
@@ -317,22 +308,13 @@ public class Menu {
 
 					break;
 				} else if (adminOperation == 3) {
-					switch (admin.upgradeUser(username)) {
-					case 0:
+					try {
+						admin.upgradeUser(username);
 						System.out.println("✔ User '" + username + "' has been upgraded successfully to author !");
-						break;
-					case -1:
+					} catch (NoSuchElementException e) {
 						tryAgain = true;
-						break;
-					case -2:
+					} catch (IllegalArgumentException e) {
 						System.out.println("✘ Account '" + username + "' is not a user !");
-						break;
-					case -3:
-						System.out.println("✘ Account '" + username + "' is already an author !");
-						break;
-					default:
-						System.out.println("! Something went wrong, please report to program authors !");
-						break;
 					}
 				} else if (adminOperation == 4) {
 					Account userAccount = accountManager.findAccount(username);

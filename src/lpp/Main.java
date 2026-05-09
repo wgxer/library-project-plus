@@ -26,8 +26,6 @@ public class Main {
 		} catch(Exception e) {
 			// Code is fine, this shouldn't happen
 		}
-		
-
 
 		JFrame frame = new AccountFrame(library);
 		frame.setVisible(true);

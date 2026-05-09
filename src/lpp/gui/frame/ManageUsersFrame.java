@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.NoSuchElementException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -176,25 +177,17 @@ public class ManageUsersFrame extends JFrame implements IUpdateable, ActionListe
 		} else if(action.equals("Upgrade to Author")) { 
 			Author author = new Author(selectedUser);
 			
-			switch (admin.upgradeUser(selectedUser.getUsername())) {
-			case 0:
+			try {
+				admin.upgradeUser(selectedUser.getUsername());
 				selectedUser = author;
 				
 				refreshUsers();
 				update();
 
-				break;
-			case -1:
+			} catch (NoSuchElementException exception) { 
 				JOptionPane.showMessageDialog(contentPane, "User not found.", "Upgrade to Author failed !", JOptionPane.ERROR_MESSAGE);
-				break;
-			case -2:
+			} catch (IllegalArgumentException exception) {
 				JOptionPane.showMessageDialog(contentPane, "Account is not a user.", "Upgrade to Author failed !", JOptionPane.ERROR_MESSAGE);
-				break;
-			case -3:
-				JOptionPane.showMessageDialog(contentPane, "User is already an author.", "Upgrade to Author failed !", JOptionPane.ERROR_MESSAGE);
-				break;
-			default:
-				break;
 			}
 			
 			if (accountManager.updateAccount(author)) {

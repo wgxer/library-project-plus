@@ -1,5 +1,7 @@
 package lpp;
 
+import java.util.NoSuchElementException;
+
 import lpp.account.Account;
 import lpp.account.User;
 
@@ -53,13 +55,12 @@ public class AccountManager {
      * -1 if an account with same username exists
      * -2 if no account can be added due to capacity constraints
      */
-    public int addAccount(Account account) {
+    public void addAccount(Account account) {
         if (findAccount(account.getUsername()) != null) {
-            return -1;
+			throw new IllegalArgumentException("User `" + account.getUsername() + "` already exists.");
         }
         
         accounts.add(account);
-        return 0;
     }
     
     public boolean updateAccount(Account account) {
