@@ -1,7 +1,5 @@
 package lpp;
 
-import java.util.NoSuchElementException;
-
 import lpp.account.Account;
 import lpp.account.User;
 
