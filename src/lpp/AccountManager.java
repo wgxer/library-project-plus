@@ -1,11 +1,10 @@
 package lpp;
 
 import lpp.account.Account;
-import java.util.LinkedList;
 import lpp.account.User;
 
 public class AccountManager {
-private static AccountManager INSTANCE;
+	private static AccountManager INSTANCE;
     
     private LinkedList<Account> accounts; 
     private int accountsCount;

@@ -2,21 +2,8 @@ package lpp;
 
 import lpp.item.LibraryItem;
 import lpp.item.UnavailableItemException;
-
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable; 
 import java.io.*; 
-
-import java.util.LinkedList;
 import java.util.NoSuchElementException;
-
 import lpp.account.Author;
 
 public class Library {
@@ -27,8 +14,8 @@ public class Library {
 	
 	public Library(String name, int capacity) {
 		this.name = name;
-		this.items = new LinkedList<>();
-		this.requests = new LinkedList<>();
+		this.items = new LinkedList<LibraryItem>();
+		this.requests = new LinkedList<LibraryItem>();
 	}
 	
 	public void writeItems(String fileName) {
@@ -61,7 +48,6 @@ public class Library {
 			FileInputStream itemsFIS = new FileInputStream(itemsFile);
 			itemsOIS = new ObjectInputStream(itemsFIS);
 		
-			int count = itemsOIS.readInt();
 			while(true) {
 			     try {
 				      LibraryItem readItem = (LibraryItem)itemsOIS.readObject();
@@ -86,7 +72,8 @@ public class Library {
 		} 
 		 
 	public boolean addItem(LibraryItem i) {
-		return items.add(i.copyItem());
+		items.add(i.copyItem());
+		return true;
 	}
 	
 	//Removes an item from list based on passed index
@@ -149,7 +136,8 @@ public class Library {
 	public boolean addRequest(LibraryItem request) {
 		if(requests.size() == 10) 
 			return false;
-		return requests.add(request.copyItem());
+		requests.add(request.copyItem());
+		return true;
 	}
 
 	// Method to deny and remove request to showcase manuscript based on passed index

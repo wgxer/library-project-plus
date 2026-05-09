@@ -1,7 +1,7 @@
 package lpp.account;
 
 import java.util.NoSuchElementException;
-import java.util.LinkedList; 
+import lpp.LinkedList; 
 
 import lpp.Displayable;
 import lpp.item.LibraryItem;
@@ -19,14 +19,14 @@ public class User extends Account implements Displayable {
 	
 	public User(String username, String password, double balance) {
 		super(username, password);
-		this.balance=balance;
+		this.balance = balance;
 		
 		borrowedItems = new LinkedList<LibraryItem>(); 
-		itemsCount=0;
+		itemsCount = 0;
 		
-		borrows=0;
-		returns=0;
-		fees=0;
+		borrows = 0;
+		returns = 0;
+		fees = 0;
 	}
 	
 	public User(User other) {
@@ -44,73 +44,52 @@ public class User extends Account implements Displayable {
 		this.returns = other.returns;
 	}
 	
-	// Regular users may only borrow books
-	public void borrowItem(LibraryItem b) throws UnavailableItemException, InsufficientBalanceException {
-		if (itemsCount == 5)
-			throw new IndexOutOfBoundsException("You have reached the borrow limit!");
-		if(b instanceof Manuscript)
-			throw new IllegalArgumentException("Regular users cannot borrow Manuscripts!");
-		if(!b.isAvailable())
-			throw new UnavailableItemException("Item is not available at the moment!");
-		double price = b.calculatePrice();
+	// Regular users may only borrow up to 3 items at a time
+	public void borrowItem(LibraryItem item) throws UnavailableItemException {
+		if (itemsCount == 3)
+			throw new IllegalStateException("You have reached the maximum number of items borrowed! Please return an item and try again.");
+		if (item.calculatePrice() > balance)
+			throw new IllegalStateException("Insufficient balance! Please top up your account and try again.");
+		if (!item.isAvailable())
+			throw new UnavailableItemException("This item is currently unavailable! Please try again later.");
 		
-		if (balance < price) {
-			throw new InsufficientBalanceException("You do not have enough balance!");
-		}
-		
-		borrowedItems.add(b); 
+		borrowedItems.add(item);
+		item.setAvailable(false);
+		modifyBalance(-item.calculatePrice());
 		itemsCount++;
 		borrows++;
-		
-		balance -= price;
-		fees += price;
-		
-		Admin.recordBorrow();
-		Admin.recordRevenue(price);
-		
-		b.useItem(this);
-	}
-
-	// return method using item object as parameter, its arguably easier to do it by index
-	public void returnItem(LibraryItem b) {
-		if (b.isAvailable())
-			throw new IllegalArgumentException("Item is already available!");
-		
-		int index=-3;
-		for(int i=0; i<itemsCount; i++)  {
-			if (b == borrowedItems.get(i)) 
-			index= i;
-		}
-		if (index == -3)
-			throw new NoSuchElementException("Item could not be found!");
-		
-		borrowedItems.remove(index); 
-		b.returnItem();
-		returns++;
-		itemsCount--;
-		
-		Admin.recordReturn();
 	}
 	
+	public void returnItem(int index) {
+		if (borrowedItems.isEmpty())
+			throw new NoSuchElementException("You have no items to return!");
+		if (index < 0 || index >= itemsCount)
+			throw new IllegalArgumentException("Invalid input!");
+		
+		borrowedItems.get(index).setAvailable(true);
+		borrowedItems.remove(index);
+		itemsCount--;
+		returns++;
+	}
+
 	public void display() {
-		    
-		    System.out.println("╭─────────────────────────────────────────────────────────────────╮");
-		    System.out.println("│                         User Information                        │");
-		    System.out.println("├─────────────────────────────────────────────────────────────────┤");
-	        System.out.printf ("│ %-30s : %-30s │\n", "Username", getUsername());
-	        System.out.printf ("│ %-30s : %-30.2f │\n", "Balance", balance);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", itemsCount);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed", borrows);
-	        System.out.printf ("│ %-30s : %-30d │\n", "Items returned", returns);
-	        System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred", fees);
-	        System.out.println("╰─────────────────────────────────────────────────────────────────╯");
+		System.out.println("╭─────────────────────────────────────────────────────────────────╮");
+		System.out.println("│                         User Information                        │");
+		System.out.println("├─────────────────────────────────────────────────────────────────┤");
+		System.out.printf ("│ %-30s : %-30s │\n", "Username", getUsername());
+		System.out.printf ("│ %-30s : %-30.2f │\n", "Balance", balance);
+		System.out.printf ("│ %-30s : %-30d │\n", "Items currently borrowed", itemsCount);
+		System.out.printf ("│ %-30s : %-30d │\n", "Items borrowed", borrows);
+		System.out.printf ("│ %-30s : %-30d │\n", "Items returned", returns);
+		System.out.printf ("│ %-30s : %-30.2f │\n", "Fees incurred", fees);
+		System.out.println("╰─────────────────────────────────────────────────────────────────╯");
 	}
 	
 	public boolean displayItemsList() {
 		if(itemsCount == 0)
 			return false;
-		for(int i=1; i<=itemsCount; i++) {
-			System.out.println(i+"- "+borrowedItems.get(i-1).getName()); 
+		for(int i = 1; i <= itemsCount; i++) {
+			System.out.println(i + "- " + borrowedItems.get(i-1).getName()); 
 		}
 		return true;
 	}
@@ -121,27 +100,27 @@ public class User extends Account implements Displayable {
 		else
 			balance += value;
 	}
-	
+
 	public double getBalance() {
 		return balance;
 	}
 
-	public LinkedList<LibraryItem> getBorrowedItems() { 
+	public LinkedList<LibraryItem> getBorrowedItems() {
 		return borrowedItems;
 	}
 
 	public int getItemsCount() {
 		return itemsCount;
 	}
-	
+
 	public int getBorrows() {
 		return borrows;
 	}
-	
+
 	public int getReturns() {
 		return returns;
 	}
-	
+
 	public double getFees() {
 		return fees;
 	}
