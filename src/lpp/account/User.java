@@ -5,7 +5,6 @@ import lpp.LinkedList;
 
 import lpp.Displayable;
 import lpp.item.LibraryItem;
-import lpp.item.Manuscript;
 import lpp.item.UnavailableItemException;
 
 public class User extends Account implements Displayable {
