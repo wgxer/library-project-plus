@@ -44,15 +44,23 @@ public class User extends Account implements Displayable {
 	public void borrowItem(LibraryItem item) throws UnavailableItemException, InsufficientBalanceException {
 		if (borrowedItems.size() == 3)
 			throw new IllegalStateException("You have reached the maximum number of items borrowed! Please return an item and try again.");
-		if (item.calculatePrice() > balance)
+		
+		double price = item.calculatePrice();
+		
+		if (price > balance)
 			throw new InsufficientBalanceException("Insufficient balance! Please top up your account and try again.");
 		if (!item.isAvailable())
 			throw new UnavailableItemException("This item is currently unavailable! Please try again later.");
 		
 		borrowedItems.add(item);
+		item.useItem(this);
+		
 		item.setAvailable(false);
-		modifyBalance(-item.calculatePrice());
+		modifyBalance(-price);
 		borrows++;
+		
+		Admin.recordBorrow();
+		Admin.recordRevenue(price);
 	}
 	
 	public void returnItem(LibraryItem item) {

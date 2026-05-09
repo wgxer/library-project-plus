@@ -54,6 +54,18 @@ public class Admin extends Account {
 		return TOTAL_REVENUE;
 	}
 	
+	public static void setTotalBorrows(int borrows) {
+		TOTAL_BORROWS = borrows;
+	}
+	
+	public static void setTotalReturns(int returns) {
+		TOTAL_RETURNS = returns;
+	}
+	
+	public static void setTotalRevenue(double totalRevenue) {
+		TOTAL_REVENUE = totalRevenue;
+	}
+	
 	public static void recordBorrow() {
 		TOTAL_BORROWS += 1;
 	}

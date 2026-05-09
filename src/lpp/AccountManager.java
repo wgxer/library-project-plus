@@ -125,4 +125,8 @@ public class AccountManager {
     	
     	return result;
     }
+    
+    public void clear() {
+    	accounts = new LinkedList<Account>();
+    }
 }

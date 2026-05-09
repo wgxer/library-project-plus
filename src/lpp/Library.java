@@ -181,4 +181,9 @@ public class Library {
 	public LinkedList<LibraryItem> getRequests() {
 		return requests;
 	}
+	
+	public void clear() {
+		items = new LinkedList<LibraryItem>();
+		requests = new LinkedList<LibraryItem>();
+	}
 }
