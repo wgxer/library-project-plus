@@ -41,30 +41,5 @@ public class Main {
 
 		JFrame frame = new AccountFrame(library);
 		frame.setVisible(true);
-		
-		// Menu code
-//		Scanner input = new Scanner(System.in);
-//
-//		System.out.println("╭────────────────────────────────────────╮");
-//		System.out.println("│                                        │");
-//		System.out.println("│ Welcome to Library Management System ! │");
-//		System.out.println("│                                        │");
-//		System.out.println("╰────────────────────────────────────────╯");
-//
-//		while (true) {
-//			Account account = AccountManager.getInstance().getCurrentAccount();
-//
-//			if (account == null) {
-//				boolean exit = Menu.showLoginMenu(input);
-//				
-//				if (exit) {
-//					break;
-//				}
-//			} else if (account instanceof Admin) {
-//				Menu.showAdminMenu(input, library, (Admin) account);
-//			} else if (account instanceof User) {
-//				Menu.showUserMenu(input, library, (User) account);
-//			}
-//		}
 	}
 }
