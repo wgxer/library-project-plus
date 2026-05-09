@@ -130,6 +130,8 @@ public class Main {
 		Library library = new Library("Library", 1000);
 		readInput("library.dat", library, accountManager);
 
+		accountManager.addAccount(new Admin("admin", "admin"));
+		
 		User user = new User("User created at compile time", "new", 10000);
 		accountManager.addAccount(user);
 		
