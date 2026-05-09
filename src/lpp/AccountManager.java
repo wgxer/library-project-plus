@@ -9,22 +9,13 @@ public class AccountManager {
     private LinkedList<Account> accounts; 
     private Account currentAccount;
     
-    private AccountManager(int capacity) {
+    private AccountManager() {
         accounts = new LinkedList<Account>();
-    }
-    
-    public static boolean init(int capacity) {
-        if (INSTANCE != null) {
-            return false;
-        }
-        
-        INSTANCE = new AccountManager(capacity);
-        return true;
     }
     
     public static AccountManager getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new AccountManager(100);
+            INSTANCE = new AccountManager();
         }
         
         return INSTANCE;

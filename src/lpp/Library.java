@@ -12,7 +12,7 @@ public class Library {
 	private LinkedList<LibraryItem> items;
 	private LinkedList<LibraryItem> requests;
 	
-	public Library(String name, int capacity) {
+	public Library(String name) {
 		this.name = name;
 		this.items = new LinkedList<LibraryItem>();
 		this.requests = new LinkedList<LibraryItem>();
