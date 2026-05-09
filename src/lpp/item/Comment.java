@@ -1,8 +1,10 @@
 package lpp.item;
 
+import java.io.Serializable;
+
 import lpp.Displayable;
 
-public class Comment implements Displayable {
+public class Comment implements Displayable, Serializable {
 
 	private String commenter;
 	private String body;
