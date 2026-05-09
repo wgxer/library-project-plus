@@ -35,7 +35,7 @@ public class AdminFrame extends JFrame implements IUpdateable, ActionListener {
 		setTitle("Library Management System - Admin Operations");
 		
 		if (parent != null) {
-			addWindowListener(new ShowParentCloseHandler(parent));
+			addWindowListener(new ShowParentCloseHandler(parent, library));
 			setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		} else {
 			setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

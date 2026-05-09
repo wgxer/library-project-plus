@@ -1,5 +1,9 @@
 package lpp;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 import lpp.account.Account;
 import lpp.account.User;
 
@@ -150,10 +154,12 @@ public class AccountManager {
 	}
 	
 	public Account[] getAccounts() {
-		return accounts;
-	}
-	
-	public int getAccountsCount() {
-		return accountsCount;
+		Account[] result = new Account[accountsCount];
+		
+		for (int i = 0; i < accountsCount; i++) {
+			result[i] = accounts[i];
+		}
+		
+		return result;
 	}
 }

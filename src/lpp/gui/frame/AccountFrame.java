@@ -169,6 +169,8 @@ public class AccountFrame extends JFrame implements ActionListener {
 
 						setVisible(false);
 						
+						accountManager.login(username, password);
+						
 						UserFrame userFrame = new UserFrame(this, library, (User) accountManager.getCurrentAccount());
 						userFrame.setVisible(true);
 
