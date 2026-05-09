@@ -43,6 +43,7 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 	private JList<LibraryItemListEntry> libraryItemsList;
 	
 	private LibraryItem selectedLibraryItem;
+	private int selectedLibraryIndex;
 	private LibraryItemListEntry[] libraryItemsListEntries;
 
 	public BrowseLibraryFrame(Frame parent, Library library, User user) {
@@ -62,7 +63,7 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 		libraryItemsListEntries = new LibraryItemListEntry[libraryItems.size()];
 		
 		for (int i = 0; i < libraryItemsListEntries.length; i++) {
-			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
+			libraryItemsListEntries[i] = new LibraryItemListEntry(library, i);
 		}
 		
 		Container contentPane = getContentPane();
@@ -119,7 +120,7 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 		balanceLabel.setText(String.format("Balance: %.2f $", user.getBalance()));
 		
 		libraryItemContainer.removeAll();
-		libraryItemContainer.add(GUIUtils.libraryItem(selectedLibraryItem, user, this, this));
+		libraryItemContainer.add(GUIUtils.libraryItem(library.getItems().get(selectedLibraryIndex), user, this, this));
 		
 		libraryItemsList = new JList<LibraryItemListEntry>(libraryItemsListEntries);
 		libraryItemsList.setSelectedIndex(previousSelectedIndex);
@@ -144,7 +145,7 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 			libraryItemsListEntries = new LibraryItemListEntry[libraryItems.size()];
 			
 			for (int i = 0; i < libraryItems.size(); i++) {
-				libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
+				libraryItemsListEntries[i] = new LibraryItemListEntry(library, i);
 			}
 			
 			update();
@@ -156,8 +157,10 @@ public class BrowseLibraryFrame extends JFrame implements IUpdateable, ActionLis
 		
 		if (index != -1) {
 			selectedLibraryItem = libraryItemsListEntries[index].getLibraryItem();
+			selectedLibraryIndex = libraryItemsListEntries[index].getIndex();
 		} else {
 			selectedLibraryItem = null;
+			selectedLibraryIndex = -1;
 		}
 		
 		update();

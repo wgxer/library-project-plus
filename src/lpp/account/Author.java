@@ -38,8 +38,8 @@ public class Author extends User {
 			throw new UnavailableItemException("Item is not available at the moment!");
 		double price = i.calculatePrice();
 		if(!(i.getAuthorName() == this.getUsername())) {
-		if(balance < price)
-			throw new InsufficientBalanceException("You do not have enough balance!");
+			if(balance < price)
+				throw new InsufficientBalanceException("You do not have enough balance!");
 		}
 		
 		borrowedItems.add(i);

@@ -7,6 +7,7 @@ import java.awt.event.WindowListener;
 import lpp.AccountManager;
 import lpp.FileManager;
 import lpp.Library;
+import lpp.gui.IUpdateable;
 
 public class ShowParentCloseHandler implements WindowListener {
 	private Frame parent;
@@ -25,6 +26,10 @@ public class ShowParentCloseHandler implements WindowListener {
 	public void windowClosed(WindowEvent e) {
 		parent.setLocation(e.getWindow().getLocation());
 		parent.setVisible(true);
+		
+		if (parent instanceof IUpdateable) {
+			((IUpdateable) parent).update();
+		}
 		
 		if (library != null) {
 			FileManager.writeLibrary("library.dat", library, AccountManager.getInstance());

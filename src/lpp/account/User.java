@@ -70,7 +70,7 @@ public class User extends Account implements Displayable {
 		int index = -3;
 		
 		for(int i = 0; i < borrowedItems.size(); i++)  {
-			if (item == borrowedItems.get(i)) index = i;
+			if (item.getName().equals(borrowedItems.get(i).getName())) index = i;
 		}
 		
 		if (index == -3)

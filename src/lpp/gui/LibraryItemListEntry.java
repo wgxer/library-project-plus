@@ -1,19 +1,27 @@
 package lpp.gui;
 
+import lpp.Library;
 import lpp.item.LibraryItem;
 
 public class LibraryItemListEntry {
-	private LibraryItem libraryItem;
+	private Library library;
+	private int index;
 	
-	public LibraryItemListEntry(LibraryItem libraryItem) {
-		this.libraryItem = libraryItem;
+	public LibraryItemListEntry(Library library, int index) {
+		this.library = library;
+		this.index = index;
 	}
 	
 	public String toString() {
+		LibraryItem libraryItem = getLibraryItem();
 		return "   " + libraryItem.getName() + " by " + libraryItem.getAuthorName();
 	}
 	
 	public LibraryItem getLibraryItem() {
-		return libraryItem;
+		return library.getItems().get(index);
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 }

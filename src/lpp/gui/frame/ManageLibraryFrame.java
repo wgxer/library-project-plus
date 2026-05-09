@@ -126,7 +126,7 @@ public class ManageLibraryFrame extends JFrame implements IUpdateable, ActionLis
 		libraryItemsListEntries = new LibraryItemListEntry[libraryItems.size()];
 		
 		for (int i = 0; i < libraryItemsListEntries.length; i++) {
-			libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
+			libraryItemsListEntries[i] = new LibraryItemListEntry(library, i);
 		}
 	}
 	
@@ -143,7 +143,7 @@ public class ManageLibraryFrame extends JFrame implements IUpdateable, ActionLis
 			libraryItemsListEntries = new LibraryItemListEntry[libraryItemsCount];
 			
 			for (int i = 0; i < libraryItemsCount; i++) {
-				libraryItemsListEntries[i] = new LibraryItemListEntry(libraryItems.get(i));
+				libraryItemsListEntries[i] = new LibraryItemListEntry(library, i);
 			}
 			
 			update();
